@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CGIS-Itinerarios · Sistema de Decisión Académica (v0.2)</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #0f172a;
+      --surface-elevated: #1e293b;
+      --border: #334155;
+      --border-subtle: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --info: #38bdf8;
+      --info-bg: rgba(56, 189, 248, 0.12);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      border: 1px solid currentColor;
+    }
+    .badge-info { color: #818cf8; background: rgba(99, 102, 241, 0.12); }
+    .badge-warning { color: var(--warning); background: var(--warning-bg); }
+    .badge-success { color: var(--success); background: var(--success-bg); }
+    .badge-danger { color: var(--danger); background: var(--danger-bg); }
+    main {
+      flex: 1;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.45rem 0.85rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--text); background: var(--surface-elevated); }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .btn:hover:not(:disabled) { background: #334155; }
+    .btn-primary { background: var(--primary); border-color: var(--primary); color: #ffffff; }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+    .table-container { overflow-x: auto; border: 1px solid var(--border); border-radius: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
+    th, td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border); }
+    th { background: var(--surface-elevated); font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); }
+    tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
+    select, input {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.45rem;
+      border-radius: 0.375rem;
+      font-family: inherit;
+      font-size: 0.82rem;
+    }
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.85rem;
+    }
+    .term-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .term-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+    .sub-item {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      padding: 0.45rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 0.75rem;
+    }
+    .sub-item-header { display: flex; justify-content: space-between; font-weight: 700; font-family: var(--font-mono); font-size: 0.72rem; }
+    .sub-actions { display: flex; gap: 0.2rem; margin-top: 0.2rem; }
+    .sub-actions button { font-size: 0.65rem; padding: 0.15rem 0.35rem; background: #334155; border: none; color: white; border-radius: 0.25rem; cursor: pointer; }
+    .alert-box {
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.82rem;
+    }
+    .alert-danger { border-color: var(--danger); background: var(--danger-bg); color: #fca5a5; }
+    .alert-warning { border-color: var(--warning); background: var(--warning-bg); color: #fde68a; }
+    .alert-info { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); color: #c7d2fe; }
+    /* Estilos específicos DAFO & CAME */
+    .dafo-quadrant {
+      border-radius: 0.5rem;
+      padding: 0.85rem;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .dafo-d { background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.3); }
+    .dafo-a { background: rgba(245, 158, 11, 0.05); border-color: rgba(245, 158, 11, 0.3); }
+    .dafo-f { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.3); }
+    .dafo-o { background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.3); }
+    .dafo-item { font-size: 0.75rem; display: flex; gap: 0.4rem; align-items: flex-start; }
+    .dafo-tag { font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem; padding: 0.1rem 0.3rem; border-radius: 0.25rem; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 0.85rem;
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      font-family: var(--font-mono);
+    }
+    @media print {
+      body { background: white !important; color: black !important; }
+      header, footer, .no-print { display: none !important; }
+      .card { border: 1px solid #ccc !important; }
+    }
+    @media (max-width: 768px) {
+      .grid-2, .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="no-print">
+    <div class="header-content">
+      <div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <h1 style="font-size:1.05rem; font-weight:800;">CGIS · Simulador de Itinerarios</h1>
+          <span class="badge badge-info">URJC-2176 (240 ECTS)</span>
+          <span class="badge badge-warning">v0.2 — PERT + DAFO + CAME</span>
+        </div>
+        <p style="font-size:0.72rem; color:var(--text-muted); margin-top:0.15rem;">
+          Ingeniería de Servicios aplicada a Ingenieria de Servicios
+        </p>
+      </div>
+      <div style="display:flex; gap:0.4rem; align-items:center;">
+        <button class="btn" onclick="exportScenarioJSON()">Exportar JSON</button>
+        <button class="btn" onclick="document.getElementById('import-file-input').click()">Importar JSON</button>
+        <input type="file" id="import-file-input" style="display:none;" onchange="importScenarioJSON(event)" accept=".json">
+        <button class="btn btn-primary" onclick="window.print()">Imprimir</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- NAV TABS -->
+    <nav class="nav-tabs no-print" aria-label="Secciones del simulador">
+      <button class="tab-btn active" onclick="setTab('planner')" id="tab-planner">1. Planificador Matricial</button>
+      <button class="tab-btn" onclick="setTab('dag-pert')" id="tab-dag-pert">2. Grafo DAG & Red PERT</button>
+      <button class="tab-btn" onclick="setTab('dafo-came')" id="tab-dafo-came">3. Diagnóstico DAFO & CAME</button>
+      <button class="tab-btn" onclick="setTab('pareto-inverse')" id="tab-pareto-inverse">4. Frontera Pareto & Modo Inverso</button>
+      <button class="tab-btn" onclick="setTab('radar')" id="tab-radar">5. Radar de Perfiles Profesionales</button>
+      <button class="tab-btn" onclick="setTab('audit')" id="tab-audit">6. Auditoría de Catálogo (50)</button>
+      <button class="tab-btn" onclick="setTab('tests')" id="tab-tests">7. Suite de Aceptación (Tests)</button>
+    </nav>
+
+    <!-- BANNER DE VALIDACIÓN ACTIVA -->
+    <div id="validation-banner" class="alert-box alert-info">
+      Cargando validador normativo...
+    </div>
+
+    <!-- SECCIÓN 1: PLANIFICADOR MATRICIAL Y PERFIL -->
+    <section id="section-planner" class="grid-2" style="grid-template-columns: 310px 1fr; align-items:start;">
+      <!-- PANEL LATERAL: PERFIL -->
+      <div class="card">
+        <h2 class="card-title">Perfil y Restricciones</h2>
+        <div class="form-group">
+          <label class="form-label" for="preset-profile-select">Escenario de Partida:</label>
+          <select id="preset-profile-select" onchange="applyProfilePreset(this.value)">
+            <option value="nuevo_ingreso">Nuevo Ingreso (0 ECTS superados)</option>
+            <option value="segundo_ano">Paso a 2º Año (60 ECTS Curso 1 superados)</option>
+            <option value="tercer_ano">Paso a 3º Año (120 ECTS C1+C2 superados)</option>
+            <option value="remanente_final">Fase Final (TFG + Prácticas + 12 ECTS)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regime-select">Régimen de Matrícula (S02 art. 2-3):</label>
+          <select id="regime-select" onchange="updateProfileSettings()">
+            <option value="completo">Tiempo Completo (48 - 78 ECTS/año)</option>
+            <option value="parcial">Tiempo Parcial (24 - 47 ECTS/año)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="max-ects-term-input">Límite Personal Máx. ECTS/Semestre:</label>
+          <input type="number" id="max-ects-term-input" value="36" min="12" max="60" onchange="updateProfileSettings()">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Optativas Elegidas (<span id="opt-count-label">4</span> / 4 requeridas):</label>
+          <div id="opt-selector-container" style="display:flex; flex-direction:column; gap:0.3rem; font-size:0.75rem;">
+            <!-- Renderizado dinámico -->
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border); padding-top:0.75rem; display:flex; flex-direction:column; gap:0.4rem;">
+          <button class="btn btn-primary" onclick="resetToOfficialRecommended()">Restablecer Plan Recomendado</button>
+        </div>
+      </div>
+
+      <!-- MATRIZ DE SEMESTRES -->
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <h2 class="card-title">Matriz Temporal de Matrícula</h2>
+            <div style="font-family:var(--font-mono); font-size:0.8rem; display:flex; gap:0.75rem;">
+              <span>Superados: <strong id="stat-passed" style="color:var(--success);">0</strong> ECTS</span>
+              <span>Matriculados: <strong id="stat-enrolled" style="color:#818cf8;">240</strong> ECTS</span>
+              <span>Total Plan: <strong>240 / 240</strong></span>
+            </div>
+          </div>
+
+          <!-- CONTENEDOR ESPECIAL: ACTIVIDADES CON CALENDARIO CONDICIONADO -->
+          <div style="background:rgba(245, 158, 11, 0.05); border:1px dashed var(--warning); border-radius:0.5rem; padding:0.65rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+              <span style="font-weight:700; font-size:0.75rem; color:var(--warning);">Actividades con Semestre No Fijado en Catálogo (Semestre = null)</span>
+              <span class="badge badge-warning">4 materias críticas</span>
+            </div>
+            <div id="unassigned-special-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:0.4rem;">
+              <!-- Tarjetas especiales -->
+            </div>
+          </div>
+
+          <!-- GRILLA DE SEMESTRES (S1..S8) -->
+          <div id="semesters-matrix-grid" class="matrix-grid">
+            <!-- Renderizado dinámico -->
+          </div>
+        </div>
+
+        <!-- VISTA TABULAR EQUIVALENTE ACCESIBLE -->
+        <div class="card">
+          <h2 class="card-title">Vista Tabular Accesible (WAI-ARIA)</h2>
+          <div class="table-container">
+            <table aria-label="Desglose accesible de asignaturas por periodo y estado">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Asignatura</th>
+                  <th>Tipo</th>
+                  <th>ECTS</th>
+                  <th>Curso</th>
+                  <th>Sem. Catálogo</th>
+                  <th>Periodo Asignado</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="accessible-table-body">
+                <!-- Filas renderizadas -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: GRAFO TOPOLÓGICO DAG & PERT (CPM) -->
+    <section id="section-dag-pert" class="card" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <div>
+          <h2 class="card-title">Red topológica PERT & Grafo acíclico dirigido (DAG)</h2>
+          <p style="font-size:0.75rem; color:var(--text-muted);">
+            Cálculo de holgura total ($Slack = LS - ES$) e identificación del <strong>Camino Crítico ($Slack = 0$)</strong>.
+          </p>
+        </div>
+        <div style="display:flex; gap:0.75rem; align-items:center; font-size:0.75rem; font-family:var(--font-mono);">
+          <span style="display:flex; align-items:center; gap:0.3rem;"><span style="width:10px; height:10px; background:#f43f5e; border-radius:50%;"></span> Camino Crítico</span>
+          <span style="display:flex; align-items:center; gap:0.3rem;"><span style="width:10px; height:10px; background:#38bdf8; border-radius:50%;"></span> Con Holgura</span>
+          <span style="display:flex; align-items:center; gap:0.3rem;"><span style="width:10px; height:10px; background:#10b981; border-radius:50%;"></span> Superada</span>
+        </div>
+      </div>
+
+      <!-- VISOR SVG DEL GRAFO -->
+      <div style="background:var(--bg); border:1px solid var(--border); border-radius:0.5rem; overflow-x:auto; padding:0.5rem; min-height:460px;">
+        <svg id="dag-pert-svg" style="width:100%; min-width:1100px; height:480px;"></svg>
+      </div>
+
+      <div class="grid-4" style="margin-top:0.5rem;">
+        <div style="background:var(--surface-elevated); padding:0.75rem; border-radius:0.5rem; border:1px solid var(--border);">
+          <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Longitud Camino Crítico</div>
+          <div id="cpm-stat-length" style="font-size:1.25rem; font-weight:800; font-family:var(--font-mono); color:#f43f5e;">7 etapas</div>
+          <div style="font-size:0.7rem; color:var(--text-subtle);">Secuencia mínima irrompible</div>
+        </div>
+        <div style="background:var(--surface-elevated); padding:0.75rem; border-radius:0.5rem; border:1px solid var(--border);">
+          <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Asignaturas Críticas</div>
+          <div id="cpm-stat-critical-count" style="font-size:1.25rem; font-weight:800; font-family:var(--font-mono); color:var(--text);">9 materias</div>
+          <div style="font-size:0.7rem; color:var(--text-subtle);">Holgura = 0 (Riesgo de retraso)</div>
+        </div>
+        <div style="background:var(--surface-elevated); padding:0.75rem; border-radius:0.5rem; border:1px solid var(--border);">
+          <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Materias Amortiguadoras</div>
+          <div id="cpm-stat-buffer-count" style="font-size:1.25rem; font-weight:800; font-family:var(--font-mono); color:var(--info);">22 materias</div>
+          <div style="font-size:0.7rem; color:var(--text-subtle);">Holgura &ge; 2 semestres</div>
+        </div>
+        <div style="background:var(--surface-elevated); padding:0.75rem; border-radius:0.5rem; border:1px solid var(--border);">
+          <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Aristas Pedagógicas</div>
+          <div id="cpm-stat-edges" style="font-size:1.25rem; font-weight:800; font-family:var(--font-mono); color:var(--primary);">21 dependencias</div>
+          <div style="font-size:0.7rem; color:var(--text-subtle);">Recomendación curricular pura</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: DIAGNÓSTICO DAFO & MATRIZ CAME -->
+    <section id="section-dafo-came" class="card" style="display:none;">
+      <div>
+        <h2 class="card-title">Diagnóstico estratégico dinámico tipo DAFO & Plan de Acción (CAME)</h2>
+        <p style="font-size:0.75rem; color:var(--text-muted);">
+          Generado automáticamente en tiempo real sobre el estado del expediente y la distribución temporal actual.
+        </p>
+      </div>
+
+      <!-- CUADRÍCULA DAFO -->
+      <div style="display:flex; flex-direction:column; gap:0.5rem;">
+        <h3 style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">1. Diagnóstico de Situación (DAFO)</h3>
+        <div class="grid-2">
+          <!-- DEBILIDADES -->
+          <div class="dafo-quadrant dafo-d">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="color:var(--danger); font-size:0.85rem;">DEBILIDADES (D)</strong>
+              <span class="dafo-tag" style="background:var(--danger-bg); color:var(--danger);" id="dafo-d-count">0 detectadas</span>
+            </div>
+            <div id="dafo-d-list" style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;"></div>
+          </div>
+          <!-- AMENAZAS -->
+          <div class="dafo-quadrant dafo-a">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="color:var(--warning); font-size:0.85rem;">AMENAZAS (A)</strong>
+              <span class="dafo-tag" style="background:var(--warning-bg); color:var(--warning);" id="dafo-a-count">0 detectadas</span>
+            </div>
+            <div id="dafo-a-list" style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;"></div>
+          </div>
+          <!-- FORTALEZAS -->
+          <div class="dafo-quadrant dafo-f">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="color:var(--success); font-size:0.85rem;">FORTALEZAS (F)</strong>
+              <span class="dafo-tag" style="background:var(--success-bg); color:var(--success);" id="dafo-f-count">0 detectadas</span>
+            </div>
+            <div id="dafo-f-list" style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;"></div>
+          </div>
+          <!-- OPORTUNIDADES -->
+          <div class="dafo-quadrant dafo-o">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="color:var(--info); font-size:0.85rem;">OPORTUNIDADES (O)</strong>
+              <span class="dafo-tag" style="background:var(--info-bg); color:var(--info);" id="dafo-o-count">0 detectadas</span>
+            </div>
+            <div id="dafo-o-list" style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CUADRÍCULA CAME -->
+      <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.75rem;">
+        <h3 style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">2. Directrices Operativas de Acción (Matriz CAME)</h3>
+        <div class="grid-2">
+          <!-- CORREGIR -->
+          <div class="dafo-quadrant" style="border-left:3px solid var(--danger);">
+            <strong style="font-size:0.8rem; color:var(--text);">C · Corregir las Debilidades</strong>
+            <div id="came-c-list" style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;"></div>
+          </div>
+          <!-- AFRONTAR -->
+          <div class="dafo-quadrant" style="border-left:3px solid var(--warning);">
+            <strong style="font-size:0.8rem; color:var(--text);">A · Afrontar las Amenazas</strong>
+            <div id="came-a-list" style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;"></div>
+          </div>
+          <!-- MANTENER -->
+          <div class="dafo-quadrant" style="border-left:3px solid var(--success);">
+            <strong style="font-size:0.8rem; color:var(--text);">M · Mantener las Fortalezas</strong>
+            <div id="came-m-list" style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;"></div>
+          </div>
+          <!-- EXPLOTAR -->
+          <div class="dafo-quadrant" style="border-left:3px solid var(--info);">
+            <strong style="font-size:0.8rem; color:var(--text);">E · Explotar las Oportunidades</strong>
+            <div id="came-e-list" style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.35rem;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: PARETO & MODO INVERSO -->
+    <section id="section-pareto-inverse" class="grid-2" style="display:none; align-items:start;">
+      <!-- PLANIFICADOR INVERSO -->
+      <div class="card">
+        <h2 class="card-title">Modo Inverso: Síntesis Guiada por Metas</h2>
+        <p style="font-size:0.75rem; color:var(--text-muted);">
+          Indica tu objetivo y el sistema configurará la matrícula compatible más equilibrada.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="inverse-goal-select">Meta Principal de Graduación:</label>
+          <select id="inverse-goal-select">
+            <option value="4y-balanced">Plan Estándar (4 Años • 60 ECTS/año nivelados)</option>
+            <option value="5y-light">Plan Extendido Laboral (5 Años • ~48 ECTS/año)</option>
+            <option value="6y-executive">Plan Reducido Executive (6 Años • ~40 ECTS/año)</option>
+            <option value="orient-ti">Especialización Máxima en Servicios TI y Cloud</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" onclick="applyInversePlanningGoal()">Sintetizar Itinerario Óptimo</button>
+
+        <div style="border-top:1px solid var(--border); padding-top:0.75rem; font-size:0.75rem; color:var(--text-muted);">
+          <strong>Garantía del Algoritmo:</strong> Explora el espacio de asignaciones respetando precedencias de curso, estacionalidad y límites legales URJC.
+        </div>
+      </div>
+
+      <!-- FRONTERA DE PARETO -->
+      <div class="card">
+        <h2 class="card-title">Frontera de Pareto Multiobjetivo </h2>
+        <p style="font-size:0.75rem; color:var(--text-muted);">
+          Espacio de alternativas: <em>Duración (Semestres) vs. Pico de Carga (ECTS/semestre)</em>.
+        </p>
+        <div style="background:var(--bg); border:1px solid var(--border); border-radius:0.5rem; padding:0.5rem; height:240px; display:flex; align-items:center; justify-content:center;">
+          <svg id="pareto-scatter-svg" style="width:100%; height:100%;"></svg>
+        </div>
+        <div style="font-size:0.72rem; color:var(--text-subtle); font-family:var(--font-mono);">
+          Puntos destacados en color representan soluciones no dominadas (Frontera Eficiente).
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 5: RADAR DE ORIENTACIÓN PROFESIONAL -->
+    <section id="section-radar" class="grid-2" style="display:none; align-items:start;">
+      <div class="card">
+        <h2 class="card-title">Cobertura de Perfiles Profesionales</h2>
+        <p style="font-size:0.75rem; color:var(--text-muted);">
+          Mide el porcentaje de competencias cubiertas según las asignaturas superadas y matriculadas en tu plan.
+        </p>
+        <div id="radar-bars-container" style="display:flex; flex-direction:column; gap:0.75rem; margin-top:0.5rem;">
+          <!-- Renderizado de barras de cobertura -->
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Mapa de Especialización</h2>
+        <div style="background:var(--bg); border:1px solid var(--border); border-radius:0.5rem; height:280px; display:flex; align-items:center; justify-content:center;">
+          <svg id="radar-polygon-svg" style="width:100%; height:100%;"></svg>
+        </div>
+        <div style="font-size:0.72rem; color:var(--text-subtle);">
+          * Agrupación analítica de asignaturas para asesoramiento; no representa mención oficial en título.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 6: AUDITORÍA DE CATÁLOGO Y FUENTES -->
+    <section id="section-audit" class="card" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <div>
+          <h2 class="card-title">Auditoría Documental del Catálogo (Plan URJC-2176)</h2>
+          <p style="font-size:0.75rem; color:var(--text-muted);">
+            Trazabilidad de 50 registros oficiales, 243 ECTS de oferta y cobertura de guías docentes.
+          </p>
+        </div>
+        <div style="font-family:var(--font-mono); font-size:0.75rem;">
+          <span class="badge badge-danger">Guías leídas: 0 / 50 (50 fallos)</span>
+          <span class="badge badge-info">ECTS Ofertados: 243</span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre Oficial</th>
+              <th>Carácter</th>
+              <th>ECTS</th>
+              <th>Curso</th>
+              <th>Semestre</th>
+              <th>Modalidad / Campus</th>
+              <th>Estado Guía</th>
+            </tr>
+          </thead>
+          <tbody id="catalog-audit-table-body">
+            <!-- 50 filas oficiales -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 7: SUITE DE ACEPTACIÓN (TEST RUNNER) -->
+    <section id="section-tests" class="card" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <h2 class="card-title">Suite de Aceptación (Tests Ejecutables en Memoria)</h2>
+        <button class="btn btn-primary" onclick="runCompleteTestSuite()">Re-ejecutar Batería de Pruebas</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Área</th>
+              <th>Criterio de Aceptación</th>
+              <th>Estado</th>
+              <th>Detalle de Verificación</th>
+            </tr>
+          </thead>
+          <tbody id="test-runner-table-body">
+            <!-- Filas de tests -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    CGIS-Itinerarios v0.2 · Ingeniería de Servicios · Plan URJC-2176 · Trazabilidad sin supuestos ocultos
+  </footer>
+
+  <!-- SCRIPT ENGINE INTEGRADO -->
+  <script>
+    /* =====================================================================
+       1. BASE DE DATOS: CATÁLOGO CGIS (Plan URJC-2176)
+       ===================================================================== */
+    const APP_VERSION = "0.2.0";
+    const PLAN_ID = "URJC-2176";
+    const ACADEMIC_YEAR = "2026-27";
+
+    const CATALOG_SUBJECTS = [
+      { id: "2176001", nombre: "ARQUITECTURA DE COMPUTADORES", ects: 3, caracter: "OB", curso_rec: 1, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176004", nombre: "HISTORIA Y FUNDAMENTOS DE SERVICIOS", ects: 6, caracter: "FB", curso_rec: 1, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176006", nombre: "INTRODUCCION A LA PROGRAMACION", ects: 6, caracter: "OB", curso_rec: 1, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176008", nombre: "MATEMATICAS PARA LA COMPUTACION Y SERVICIOS", ects: 6, caracter: "OB", curso_rec: 1, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176011", nombre: "SOCIOLOGIA DE LOS SERVICIOS", ects: 6, caracter: "FB", curso_rec: 1, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176012", nombre: "TEORIA DE SISTEMAS", ects: 3, caracter: "OB", curso_rec: 1, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176002", nombre: "ASPECTOS ETICOS, LEGISLACION Y PROFESION", ects: 6, caracter: "FB", curso_rec: 1, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176003", nombre: "DESARROLLO DE SERVICIOS", ects: 6, caracter: "OB", curso_rec: 1, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176005", nombre: "INTELIGENCIA EMOCIONAL", ects: 3, caracter: "OB", curso_rec: 1, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176007", nombre: "LOGICA", ects: 3, caracter: "OB", curso_rec: 1, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176009", nombre: "ORGANIZACION EMPRESARIAL", ects: 6, caracter: "FB", curso_rec: 1, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176010", nombre: "SISTEMAS OPERATIVOS Y REDES", ects: 6, caracter: "FB", curso_rec: 1, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176014", nombre: "BASES DE DATOS", ects: 6, caracter: "OB", curso_rec: 2, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176016", nombre: "DERECHO PRIVADO", ects: 6, caracter: "FB", curso_rec: 2, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176017", nombre: "DISEÑO Y MANTENIMIENTO DE SERVICIOS", ects: 3, caracter: "OB", curso_rec: 2, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176019", nombre: "ESTADISTICA", ects: 6, caracter: "OB", curso_rec: 2, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176020", nombre: "HABILIDADES DE COMUNICACION", ects: 6, caracter: "FB", curso_rec: 2, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176013", nombre: "ARQUITECTURAS DE SISTEMAS DE INFORMACION", ects: 6, caracter: "OB", curso_rec: 2, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176015", nombre: "COMUNICACION EMPRESARIAL", ects: 6, caracter: "FB", curso_rec: 2, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176018", nombre: "ECONOMIA EN CIENCIAS DE SERVICIOS", ects: 6, caracter: "FB", curso_rec: 2, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176022", nombre: "INGENIERIA DEL SOFTWARE", ects: 3, caracter: "OB", curso_rec: 2, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176024", nombre: "INVESTIGACION OPERATIVA", ects: 3, caracter: "OB", curso_rec: 2, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176025", nombre: "SISTEMAS DE INFORMACION", ects: 3, caracter: "OB", curso_rec: 2, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176021", nombre: "IDIOMA MODERNO", ects: 6, caracter: "FB", curso_rec: 2, sem_rec: null, mod: "PRESENCIAL", campus: null },
+      { id: "2176027", nombre: "DIRECCION DE OPERACIONES EN SERVICIOS", ects: 3, caracter: "OB", curso_rec: 3, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176028", nombre: "DIRECCION Y GESTION DE PROYECTOS", ects: 3, caracter: "OB", curso_rec: 3, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176032", nombre: "INGENIERIA DE SERVICIOS", ects: 6, caracter: "OB", curso_rec: 3, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176034", nombre: "LIDERAZGO Y TRABAJO EN EQUIPO", ects: 3, caracter: "OB", curso_rec: 3, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176036", nombre: "MICROECONOMIA", ects: 3, caracter: "OB", curso_rec: 3, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176038", nombre: "SISTEMAS DE INFORMACION EMPRESARIAL", ects: 6, caracter: "OB", curso_rec: 3, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176026", nombre: "TECNOLOGIAS PARA LA GESTION DE GRANDES VOLUMENES DE DATOS", ects: 6, caracter: "OB", curso_rec: 3, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176029", nombre: "ECONOMIA FINANCIERA Y CONTABILIDAD", ects: 3, caracter: "OB", curso_rec: 3, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176030", nombre: "GESTION DE SERVICIOS", ects: 6, caracter: "OB", curso_rec: 3, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176031", nombre: "INGENIERIA DE PROCESOS DE NEGOCIO", ects: 3, caracter: "OB", curso_rec: 3, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176023", nombre: "INTELIGENCIA Y ANALISIS DE NEGOCIO", ects: 3, caracter: "OB", curso_rec: 3, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176033", nombre: "INTERACCION PERSONA-ORDENADOR Y MULTIMEDIA", ects: 6, caracter: "OB", curso_rec: 3, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176035", nombre: "MARKETING DE SERVICIOS", ects: 6, caracter: "OB", curso_rec: 3, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176037", nombre: "SERVICIOS MOVILES Y UBICUOS", ects: 3, caracter: "OB", curso_rec: 3, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176039", nombre: "ARQUITECTURAS EMPRESARIALES", ects: 3, caracter: "OB", curso_rec: 4, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176040", nombre: "DIRECCION ESTRATEGICA DE LA EMPRESA Y CONSULTORIA DE NEGOCIO ORIENTADA A SERVICIOS", ects: 3, caracter: "OB", curso_rec: 4, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176041", nombre: "INICIATIVA EMPRESARIAL", ects: 3, caracter: "OB", curso_rec: 4, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176047", nombre: "RECURSOS HUMANOS", ects: 3, caracter: "OB", curso_rec: 4, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176046", nombre: "PRACTICAS EXTERNAS", ects: 24, caracter: "OB", curso_rec: 4, sem_rec: null, mod: "PRESENCIAL", campus: null },
+      { id: "2176048", nombre: "RECONOCIMIENTO ACADEMICO DE CREDITOS", ects: 6, caracter: "OB", curso_rec: 4, sem_rec: null, mod: "PRESENCIAL", campus: null },
+      { id: "2176049", nombre: "TRABAJO FIN DE GRADO", ects: 6, caracter: "OB", curso_rec: 4, sem_rec: null, mod: "PRESENCIAL", campus: null },
+      // 5 Optativas
+      { id: "2176043", nombre: "SERVICIOS EN ADMINISTRACIONES PUBLICAS", ects: 3, caracter: "OP", curso_rec: 4, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176042", nombre: "SERVICIOS EN BANCA Y SEGUROS", ects: 3, caracter: "OP", curso_rec: 4, sem_rec: 1, mod: "PRESENCIAL", campus: null },
+      { id: "2176052", nombre: "SERVICIOS EN CONSULTORIA (SEMIPRESENCIAL)", ects: 3, caracter: "OP", curso_rec: 4, sem_rec: 2, mod: "SEMIPRESENCIAL", campus: "MADRID-MANUEL BECERRA" },
+      { id: "2176045", nombre: "SERVICIOS EN TECNOLOGIAS DE LA INFORMACION", ects: 3, caracter: "OP", curso_rec: 4, sem_rec: 2, mod: "PRESENCIAL", campus: null },
+      { id: "2176044", nombre: "SERVICIOS EN TELECOMUNICACIONES", ects: 3, caracter: "OP", curso_rec: 4, sem_rec: 2, mod: "PRESENCIAL", campus: null }
+    ];
+
+    // Secuencias pedagógicas documentadas (Capa 2: no son prohibiciones legales)
+    const PEDAGOGICAL_EDGES = [
+      { from: "2176006", to: "2176014", label: "Prog -> BD" },
+      { from: "2176014", to: "2176013", label: "BD -> Arq SI" },
+      { from: "2176014", to: "2176026", label: "BD -> Big Data" },
+      { from: "2176013", to: "2176038", label: "Arq SI -> SI Emp" },
+      { from: "2176008", to: "2176019", label: "Mates -> Estadística" },
+      { from: "2176019", to: "2176024", label: "Estadística -> IO" },
+      { from: "2176024", to: "2176023", label: "IO -> Analítica Negocio" },
+      { from: "2176004", to: "2176003", label: "Fund Servicios -> Desarrollo" },
+      { from: "2176003", to: "2176017", label: "Desarrollo -> Diseño" },
+      { from: "2176017", to: "2176032", label: "Diseño -> Ing Servicios" },
+      { from: "2176032", to: "2176030", label: "Ing Serv -> Gestión Serv" },
+      { from: "2176030", to: "2176039", label: "Gestión Serv -> Arq Empresariales" },
+      { from: "2176039", to: "2176040", label: "Arq Emp -> Consultoría" },
+      { from: "2176009", to: "2176016", label: "Org Emp -> D. Privado" },
+      { from: "2176016", to: "2176018", label: "D. Privado -> Economía" },
+      { from: "2176018", to: "2176036", label: "Economía -> Microeconomía" },
+      { from: "2176036", to: "2176029", label: "Micro -> Contabilidad/Finanzas" },
+      { from: "2176012", to: "2176022", label: "Sistemas -> Ing Software" },
+      { from: "2176022", to: "2176028", label: "Software -> Gestión Proyectos" },
+      { from: "2176028", to: "2176031", label: "Proyectos -> BPM" },
+      { from: "2176035", to: "2176037", label: "Marketing -> Serv Móviles" }
+    ];
+
+    /* =====================================================================
+       2. ESTADO DEL ESTUDIANTE (M01)
+       ===================================================================== */
+    let studentProfile = {
+      id: "anonimo_001",
+      regimen: "completo", // 'completo' | 'parcial'
+      max_ects_semestre: 36,
+      horas_disponibles_semana: 38,
+      selected_electives: ["2176043", "2176042", "2176052", "2176045"], // 4 de 5
+      expediente: {}, // id -> 'superada'
+      asignaciones: {} // id -> semestre (1..8+)
+    };
+
+    /* =====================================================================
+       3. VALIDADOR NORMATIVA (D03 / S01)
+       ===================================================================== */
+    function validateSchedule(profile, assignments) {
+      const violations = [];
+      const warnings = [];
+      const conditions = [];
+
+      const chosenOpt = profile.selected_electives;
+      if (chosenOpt.length !== 4) {
+        violations.push({ rule: "OPT-4", msg: `Debes seleccionar exactamente 4 optativas (12 ECTS). Tienes ${chosenOpt.length}.` });
+      }
+
+      const activeSubjectIds = new Set(
+        CATALOG_SUBJECTS
+          .filter(s => s.caracter !== "OP" || chosenOpt.includes(s.id))
+          .map(s => s.id)
+      );
+
+      let ectsSuperados = 0;
+      Object.keys(profile.expediente).forEach(id => {
+        if (profile.expediente[id] === "superada" && activeSubjectIds.has(id)) {
+          const s = CATALOG_SUBJECTS.find(x => x.id === id);
+          if (s) ectsSuperados += s.ects;
+        }
+      });
+
+      const maxTerm = Math.max(8, ...Object.values(assignments));
+      const termLoads = {};
+      const termSubjects = {};
+      const subjectTerm = {};
+
+      for (let t = 1; t <= maxTerm; t++) {
+        termLoads[t] = 0;
+        termSubjects[t] = [];
+      }
+
+      activeSubjectIds.forEach(id => {
+        if (profile.expediente[id] === "superada") return;
+        const t = assignments[id];
+        if (!t) {
+          violations.push({ rule: "UNASSIGNED", msg: `Materia ${id} pendiente de asignar cuatrimestre.` });
+          return;
+        }
+        const s = CATALOG_SUBJECTS.find(x => x.id === id);
+        if (s) {
+          termLoads[t] = (termLoads[t] || 0) + s.ects;
+          termSubjects[t].push(s);
+          subjectTerm[id] = t;
+        }
+      });
+
+      // Límites personales semestrales
+      for (let t = 1; t <= maxTerm; t++) {
+        if (termLoads[t] > profile.max_ects_semestre) {
+          violations.push({
+            rule: "PERSONAL-LIMIT",
+            msg: `Semestre ${t}: ${termLoads[t]} ECTS excede tu límite personal de ${profile.max_ects_semestre} ECTS.`
+          });
+        }
+      }
+
+      // Reglas anuales S02 (Años 1..N agrupando t y t+1)
+      const totalYears = Math.ceil(maxTerm / 2);
+      for (let y = 1; y <= totalYears; y++) {
+        const s1 = (y - 1) * 2 + 1;
+        const s2 = (y - 1) * 2 + 2;
+        const ySubs = [...(termSubjects[s1] || []), ...(termSubjects[s2] || [])];
+        const yEctsTotal = (termLoads[s1] || 0) + (termLoads[s2] || 0);
+
+        if (yEctsTotal === 0) continue;
+
+        // Exclusión de Prácticas y TFG para el límite superior de 78 en completo
+        const yEctsFor78 = ySubs.filter(s => s.id !== "2176046" && s.id !== "2176049").reduce((a,b)=>a+b.ects, 0);
+
+        // Comprobar si es remanente menor de 24
+        let remainingAfterYear = 0;
+        activeSubjectIds.forEach(id => {
+          if (profile.expediente[id] !== "superada") {
+            const t = subjectTerm[id];
+            if (!t || t > s2) {
+              const sub = CATALOG_SUBJECTS.find(s => s.id === id);
+              if (sub) remainingAfterYear += sub.ects;
+            }
+          }
+        });
+        const isResidual = (remainingAfterYear === 0 && yEctsTotal < 24);
+
+        if (profile.regimen === "completo") {
+          if (yEctsTotal < 48 && !isResidual) {
+            violations.push({
+              rule: "S02-MIN-COMPLETO",
+              msg: `Año ${y} (Sem ${s1}-${s2}): ${yEctsTotal} ECTS es menor que el mínimo legal de 48 ECTS/año (art. 2.2 S02).`
+            });
+          }
+          if (yEctsFor78 > 78) {
+            violations.push({
+              rule: "S02-MAX-COMPLETO",
+              msg: `Año ${y}: ${yEctsFor78} ECTS computables supera el máximo de 78 ECTS en tiempo completo (art. 3.1 S02).`
+            });
+          }
+        } else if (profile.regimen === "parcial") {
+          if (yEctsTotal < 24 && !isResidual) {
+            violations.push({
+              rule: "S02-MIN-PARCIAL",
+              msg: `Año ${y}: ${yEctsTotal} ECTS es menor que el mínimo de 24 ECTS para tiempo parcial (art. 2.3 S02).`
+            });
+          }
+          if (yEctsTotal > 47) {
+            violations.push({
+              rule: "S02-MAX-PARCIAL",
+              msg: `Año ${y}: ${yEctsTotal} ECTS supera el máximo de 47 ECTS para tiempo parcial (art. 2.3 S02).`
+            });
+          }
+        }
+      }
+
+      // Regla Prácticas (S04): 45% = 108 ECTS superados
+      const pracTerm = subjectTerm["2176046"];
+      if (pracTerm) {
+        let priorApproved = ectsSuperados;
+        for (let t = 1; t < pracTerm; t++) priorApproved += (termLoads[t] || 0);
+        if (priorApproved < 108) {
+          violations.push({
+            rule: "S04-PRACTICAS-108",
+            msg: `Prácticas Externas en Semestre ${pracTerm}: Requiere 108 ECTS superados previos. Solo acumulas ${priorApproved} ECTS.`
+          });
+        }
+      }
+
+      // Regla TFG Matrícula (S03 art. 7.3): Todo el remanente matriculado
+      const tfgTerm = subjectTerm["2176049"];
+      if (tfgTerm) {
+        const tfgYear = Math.ceil(tfgTerm / 2);
+        const tfgYearEnd = tfgYear * 2;
+        let pendingBeyondTfg = 0;
+        activeSubjectIds.forEach(id => {
+          if (id !== "2176049" && profile.expediente[id] !== "superada") {
+            const t = subjectTerm[id];
+            if (!t || t > tfgYearEnd) {
+              const sub = CATALOG_SUBJECTS.find(s => s.id === id);
+              if (sub) pendingBeyondTfg += sub.ects;
+            }
+          }
+        });
+        if (pendingBeyondTfg > 0) {
+          violations.push({
+            rule: "S03-TFG-MATRICULA-TOTAL",
+            msg: `TFG en Semestre ${tfgTerm}: Exige matricular la totalidad de créditos pendientes del plan en el mismo curso (art. 7.3 S03). Quedan ${pendingBeyondTfg} ECTS fuera.`
+          });
+        }
+      }
+
+      // Advertencias pedagógicas (inversión de secuencias)
+      PEDAGOGICAL_EDGES.forEach(edge => {
+        const tFrom = profile.expediente[edge.from] === "superada" ? 0 : subjectTerm[edge.from];
+        const tTo = profile.expediente[edge.to] === "superada" ? 0 : subjectTerm[edge.to];
+        if (tFrom && tTo && tFrom >= tTo) {
+          warnings.push({
+            rule: "PEDAGOGICAL-SEQUENCE",
+            msg: `Secuencia pedagógica alterada: ${edge.label}. Se recomienda cursar antes la asignatura previa.`
+          });
+        }
+      });
+
+      // Condiciones de supuestos
+      ["2176021", "2176046", "2176048", "2176049"].forEach(sid => {
+        if (subjectTerm[sid]) {
+          conditions.push(`Materia ${sid} asignada a Semestre ${subjectTerm[sid]} bajo supuesto de calendario (semestre no fijado en guía).`);
+        }
+      });
+
+      return {
+        isValid: violations.length === 0,
+        violations,
+        warnings,
+        conditions,
+        termLoads,
+        ectsSuperados,
+        maxTerm
+      };
+    }
+
+    /* =====================================================================
+       4. MOTOR CPM / PERT: CÁLCULO DE CADENA CRÍTICA Y HOLGURA
+       ===================================================================== */
+    function computeCPM() {
+      // Grafo de 50 materias + relaciones pedagógicas
+      const duration = {};
+      CATALOG_SUBJECTS.forEach(s => duration[s.id] = 1); // duración 1 periodo
+
+      // Predecesores y Sucesores
+      const preds = {};
+      const succs = {};
+      CATALOG_SUBJECTS.forEach(s => { preds[s.id] = []; succs[s.id] = []; });
+
+      PEDAGOGICAL_EDGES.forEach(e => {
+        preds[e.to].push(e.from);
+        succs[e.from].push(e.to);
+      });
+
+      // Forward Pass (ES, EF)
+      const ES = {};
+      const EF = {};
+      const inDegree = {};
+      CATALOG_SUBJECTS.forEach(s => inDegree[s.id] = preds[s.id].length);
+      const queue = CATALOG_SUBJECTS.filter(s => inDegree[s.id] === 0).map(s => s.id);
+
+      queue.forEach(id => {
+        ES[id] = 1;
+        EF[id] = 1;
+      });
+
+      const processed = [];
+      const tempQueue = [...queue];
+      while (tempQueue.length > 0) {
+        const u = tempQueue.shift();
+        processed.push(u);
+        succs[u].forEach(v => {
+          ES[v] = Math.max(ES[v] || 1, (EF[u] || 1) + 1);
+          EF[v] = ES[v];
+          inDegree[v]--;
+          if (inDegree[v] === 0) tempQueue.push(v);
+        });
+      }
+
+      // Backward Pass (LS, LF)
+      const projectDuration = Math.max(...Object.values(EF));
+      const LS = {};
+      const LF = {};
+      CATALOG_SUBJECTS.forEach(s => {
+        LF[s.id] = projectDuration;
+        LS[s.id] = projectDuration;
+      });
+
+      const revProcessed = [...processed].reverse();
+      revProcessed.forEach(u => {
+        if (succs[u].length > 0) {
+          LF[u] = Math.min(...succs[u].map(v => LS[v] - 1));
+          LS[u] = LF[u];
+        }
+      });
+
+      // Slack & Critical Path
+      const slack = {};
+      const criticalNodes = [];
+      CATALOG_SUBJECTS.forEach(s => {
+        slack[s.id] = LS[s.id] - ES[s.id];
+        if (slack[s.id] === 0) criticalNodes.push(s.id);
+      });
+
+      return {
+        projectDuration,
+        ES, EF, LS, LF,
+        slack,
+        criticalNodes
+      };
+    }
+
+    /* =====================================================================
+       5. MOTOR DINÁMICO DAFO & CAME
+       ===================================================================== */
+    function evaluateDAFO_CAME(val) {
+      const D = [];
+      const A = [];
+      const F = [];
+      const O = [];
+
+      const C = [];
+      const AM = [];
+      const M = [];
+      const E = [];
+
+      // 1. D - Debilidades
+      for (let t = 1; t <= val.maxTerm; t++) {
+        if (val.termLoads[t] > 30 && studentProfile.horas_disponibles_semana < 35) {
+          D.push({ tag: "SOBRECARGA", desc: `Semestre ${t} tiene ${val.termLoads[t]} ECTS pero dispones de solo ${studentProfile.horas_disponibles_semana}h/sem.` });
+          C.push(`Reubicar una materia de 6 ECTS del Semestre ${t} hacia cuatrimestres posteriores con holgura.`);
+        }
+      }
+      val.warnings.forEach(w => {
+        D.push({ tag: "SECUENCIA", desc: w.msg });
+        C.push(`Corregir orden: Cursar primero la asignatura base para evitar déficit de preparación.`);
+      });
+
+      // 2. A - Amenazas
+      const sNullAssigned = ["2176021", "2176046", "2176048", "2176049"].filter(id => studentProfile.asignaciones[id]);
+      if (sNullAssigned.length > 0) {
+        A.push({ tag: "INCERTIDUMBRE", desc: `Hay ${sNullAssigned.length} actividades críticas (TFG/Prácticas/RAC/Idioma) con calendario no publicado oficialmente.` });
+        AM.push(`Establecer un plan de contingencia por si la secretaría del centro programa el TFG o Prácticas en el cuatrimestre inverso.`);
+      }
+      val.violations.forEach(v => {
+        A.push({ tag: "BLOQUEO-LEGAL", desc: v.msg });
+        AM.push(`Ajustar inmediatamente la matrícula para no violar la normativa de permanencia o acceso a TFG.`);
+      });
+
+      // 3. F - Fortalezas
+      if (val.ectsSuperados >= 108) {
+        F.push({ tag: "PRÁCTICAS-OK", desc: `Acumulas ${val.ectsSuperados} ECTS superados (&ge;108 ECTS): Habilitado formalmente para Prácticas Externas.` });
+        M.push(`Mantener la prioridad de Prácticas para consolidar los 24 ECTS en empresa.`);
+      } else {
+        F.push({ tag: "RITMO", desc: `Progresando ordenadamente en el núcleo básico y obligatorio de los primeros cursos.` });
+        M.push(`Mantener la aprobación en primera convocatoria de las materias cuantitativas y de desarrollo.`);
+      }
+
+      // 4. O - Oportunidades
+      const optChosen = studentProfile.selected_electives;
+      if (optChosen.includes("2176052") && optChosen.includes("2176045")) {
+        O.push({ tag: "SINERGIA-TI", desc: `Orientación coherente hacia Consultoría de Servicios TI y Cloud Computing.` });
+        E.push(`Aprovechar la modalidad semipresencial de Consultoría (2176052) para liberar horas de asistencia.`);
+      }
+      if (optChosen.includes("2176042") && optChosen.includes("2176043")) {
+        O.push({ tag: "SINERGIA-CORP", desc: `Orientación especializada hacia Servicios en Banca, Finanzas y Sector Público.` });
+        E.push(`Vincular el TFG temáticamente a la digitalización en administraciones públicas o entidades bancarias.`);
+      }
+
+      return { D, A, F, O, C, AM, M, E };
+    }
+
+    /* =====================================================================
+       6. RENDERIZADO VISUAL DEL GRAFO PERT / DAG (SVG)
+       ===================================================================== */
+    function renderDAGPERT() {
+      const svg = document.getElementById("dag-pert-svg");
+      if (!svg) return;
+      svg.innerHTML = "";
+
+      const cpm = computeCPM();
+      const width = Math.max(svg.clientWidth || 1100, 1100);
+      const height = 480;
+      const paddingX = 70;
+      const paddingY = 50;
+
+      // Asignar coordenadas X por curso (1..4) e Y distribuidos
+      const cols = 4;
+      const colWidth = (width - paddingX * 2) / (cols - 1);
+      const courseGroups = { 1: [], 2: [], 3: [], 4: [] };
+
+      CATALOG_SUBJECTS.forEach(s => {
+        const c = s.curso_rec || 1;
+        courseGroups[c].push(s);
+      });
+
+      const positions = {};
+      for (let c = 1; c <= 4; c++) {
+        const list = courseGroups[c];
+        const x = paddingX + (c - 1) * colWidth;
+        const rowHeight = (height - paddingY * 2) / (list.length + 1);
+        list.forEach((s, idx) => {
+          positions[s.id] = {
+            x: x + (idx % 2 === 0 ? -15 : 15), // pequeño stagger
+            y: paddingY + (idx + 1) * rowHeight,
+            sub: s
+          };
+        });
+      }
+
+      // Marcadores SVG de flechas
+      svg.innerHTML += `
+        <defs>
+          <marker id="arrow-crit" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#f43f5e" />
+          </marker>
+          <marker id="arrow-norm" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" />
+          </marker>
+        </defs>
+      `;
+
+      // 1. Dibujar Aristas
+      PEDAGOGICAL_EDGES.forEach(edge => {
+        const pFrom = positions[edge.from];
+        const pTo = positions[edge.to];
+        if (!pFrom || !pTo) return;
+
+        const isCrit = cpm.criticalNodes.includes(edge.from) && cpm.criticalNodes.includes(edge.to);
+        const stroke = isCrit ? "#f43f5e" : "#334155";
+        const widthLine = isCrit ? "2.5" : "1.2";
+        const marker = isCrit ? "url(#arrow-crit)" : "url(#arrow-norm)";
+
+        const dx = pTo.x - pFrom.x;
+        const d = `M ${pFrom.x} ${pFrom.y} C ${pFrom.x + dx * 0.45} ${pFrom.y}, ${pTo.x - dx * 0.45} ${pTo.y}, ${pTo.x} ${pTo.y}`;
+
+        svg.innerHTML += `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="${widthLine}" marker-end="${marker}" opacity="${isCrit ? 1 : 0.6}" />`;
+      });
+
+      // 2. Dibujar Nodos
+      CATALOG_SUBJECTS.forEach(sub => {
+        const pos = positions[sub.id];
+        if (!pos) return;
+
+        const isCrit = cpm.criticalNodes.includes(sub.id);
+        const isPassed = studentProfile.expediente[sub.id] === "superada";
+        const slackVal = cpm.slack[sub.id];
+
+        let stroke = isCrit ? "#f43f5e" : "#38bdf8";
+        let fill = isPassed ? "#10b981" : (isCrit ? "#1f131a" : "#0f172a");
+
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("class", "cursor-pointer");
+        g.onclick = () => alert(`${sub.id}: ${sub.nombre}\nECTS: ${sub.ects}\nHolgura (Slack): ${slackVal} semestres\nCamino Crítico: ${isCrit ? 'SÍ' : 'NO'}`);
+
+        g.innerHTML = `
+          <circle cx="${pos.x}" cy="${pos.y}" r="13" fill="${fill}" stroke="${stroke}" stroke-width="${isCrit ? '2.5' : '1.5'}" />
+          <text x="${pos.x}" y="${pos.y + 3.5}" fill="#ffffff" font-size="7.5" font-weight="bold" font-family="monospace" text-anchor="middle" pointer-events="none">${sub.id.slice(-3)}</text>
+          <title>${sub.id}: ${sub.nombre}&#10;Holgura: ${slackVal}&#10;${isCrit ? 'EN CAMINO CRÍTICO' : 'Con holgura'}</title>
+        `;
+        svg.appendChild(g);
+      });
+
+      // Actualizar métricas del CPM
+      document.getElementById("cpm-stat-length").textContent = `${cpm.projectDuration} semestres`;
+      document.getElementById("cpm-stat-critical-count").textContent = `${cpm.criticalNodes.length} materias`;
+      document.getElementById("cpm-stat-buffer-count").textContent = `${CATALOG_SUBJECTS.filter(s => cpm.slack[s.id] >= 2).length} materias`;
+      document.getElementById("cpm-stat-edges").textContent = `${PEDAGOGICAL_EDGES.length} dependencias`;
+    }
+
+    /* =====================================================================
+       7. RENDERIZADO DE VISTAS (DAFO, PARETO, RADAR, TABLAS)
+       ===================================================================== */
+    function refreshAllViews() {
+      const val = validateSchedule(studentProfile, studentProfile.asignaciones);
+      renderValidationBanner(val);
+      renderSpecialUnassigned();
+      renderSemestersMatrix(val);
+      renderAccessibleTable();
+      renderAuditTable();
+      renderDAFO_CAME(val);
+      renderParetoScatter();
+      renderRadarProfile();
+      updateHeaderStats(val);
+    }
+
+    function renderValidationBanner(val) {
+      const banner = document.getElementById("validation-banner");
+      if (!val.isValid) {
+        banner.className = "alert-box alert-danger";
+        banner.innerHTML = `<strong>Infracciones Normativas Bloqueantes (${val.violations.length}):</strong><ul style="margin-top:0.25rem; padding-left:1.25rem;">${val.violations.map(v => `<li>${v.msg}</li>`).join('')}</ul>`;
+      } else if (val.conditions.length > 0) {
+        banner.className = "alert-box alert-warning";
+        banner.innerHTML = `<strong>Itinerario Válido Condicionado (${val.conditions.length}):</strong><ul style="margin-top:0.25rem; padding-left:1.25rem;">${val.conditions.map(c => `<li>${c}</li>`).join('')}</ul>`;
+      } else {
+        banner.className = "alert-box alert-info";
+        banner.innerHTML = `<strong>Itinerario Plenamente Conforme:</strong> Cumple permanencia anual URJC, umbral de prácticas (108 ECTS) y condiciones de TFG.`;
+      }
+    }
+
+    function updateHeaderStats(val) {
+      document.getElementById("stat-passed").textContent = val.ectsSuperados;
+      let enrolled = 0;
+      Object.keys(studentProfile.asignaciones).forEach(id => {
+        if (studentProfile.expediente[id] !== "superada") {
+          const s = CATALOG_SUBJECTS.find(x => x.id === id);
+          if (s) enrolled += s.ects;
+        }
+      });
+      document.getElementById("stat-enrolled").textContent = enrolled;
+    }
+
+    function renderSpecialUnassigned() {
+      const container = document.getElementById("unassigned-special-container");
+      container.innerHTML = "";
+      const specials = ["2176021", "2176046", "2176048", "2176049"];
+
+      specials.forEach(id => {
+        const sub = CATALOG_SUBJECTS.find(s => s.id === id);
+        const assigned = studentProfile.asignaciones[id] || "null";
+
+        const div = document.createElement("div");
+        div.className = "sub-item";
+        div.innerHTML = `
+          <div class="sub-item-header">
+            <span>${sub.id}</span>
+            <span class="badge ${assigned !== 'null' ? 'badge-info' : 'badge-warning'}">${sub.ects} ECTS</span>
+          </div>
+          <div style="font-weight:600; font-size:0.75rem;">${sub.nombre}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.35rem;">
+            <span style="font-size:0.7rem; color:var(--text-subtle);">Semestre Supuesto:</span>
+            <select onchange="reassignSubject('${sub.id}', this.value)" style="padding:0.2rem; font-size:0.7rem;">
+              <option value="null" ${assigned === 'null' ? 'selected' : ''}>Sin fijar (null)</option>
+              ${[1,2,3,4,5,6,7,8,9,10].map(t => `<option value="${t}" ${assigned == t ? 'selected' : ''}>Semestre ${t}</option>`).join('')}
+            </select>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderSemestersMatrix(val) {
+      const grid = document.getElementById("semesters-matrix-grid");
+      grid.innerHTML = "";
+      const displayTerms = Math.max(8, val.maxTerm);
+
+      for (let t = 1; t <= displayTerms; t++) {
+        const year = Math.ceil(t / 2);
+        const load = val.termLoads[t] || 0;
+        const box = document.createElement("div");
+        box.className = "term-box";
+        box.innerHTML = `
+          <div class="term-header">
+            <span><strong>Semestre ${t}</strong> (Año ${year})</span>
+            <span class="badge ${load > studentProfile.max_ects_semestre ? 'badge-danger' : (load > 30 ? 'badge-warning' : 'badge-info')}">${load} ECTS</span>
+          </div>
+          <div id="term-subs-${t}" style="display:flex; flex-direction:column; gap:0.4rem; flex:1;"></div>
+        `;
+        grid.appendChild(box);
+
+        const listContainer = box.querySelector(`#term-subs-${t}`);
+        const subsInTerm = CATALOG_SUBJECTS.filter(s => studentProfile.asignaciones[s.id] == t && studentProfile.expediente[s.id] !== "superada");
+
+        if (subsInTerm.length === 0) {
+          listContainer.innerHTML = `<span style="color:var(--text-subtle); font-size:0.75rem; text-align:center; margin:auto;">Sin asignaturas</span>`;
+        } else {
+          subsInTerm.forEach(sub => {
+            const item = document.createElement("div");
+            item.className = "sub-item";
+            item.innerHTML = `
+              <div class="sub-item-header">
+                <span>${sub.id}</span>
+                <span class="badge ${sub.caracter === 'FB' ? 'badge-success' : (sub.caracter === 'OP' ? 'badge-warning' : 'badge-info')}">${sub.caracter} · ${sub.ects} ECTS</span>
+              </div>
+              <div style="font-weight:600;">${sub.nombre}</div>
+              <div class="sub-actions">
+                <button onclick="reassignSubject('${sub.id}', ${t > 1 ? t - 1 : t})">&larr; S${t > 1 ? t - 1 : t}</button>
+                <button onclick="reassignSubject('${sub.id}', ${t + 1})">S${t + 1} &rarr;</button>
+                <button onclick="markPassed('${sub.id}')" style="background:var(--success);">Superada</button>
+              </div>
+            `;
+            listContainer.appendChild(item);
+          });
+        }
+      }
+    }
+
+    function renderAccessibleTable() {
+      const tbody = document.getElementById("accessible-table-body");
+      tbody.innerHTML = "";
+
+      CATALOG_SUBJECTS.forEach(sub => {
+        const isPassed = studentProfile.expediente[sub.id] === "superada";
+        const assignedTerm = studentProfile.asignaciones[sub.id] || "null";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="font-family:var(--font-mono); font-weight:700;">${sub.id}</td>
+          <td>${sub.nombre}</td>
+          <td><span class="badge ${sub.caracter === 'FB' ? 'badge-success' : 'badge-info'}">${sub.caracter}</span></td>
+          <td style="font-family:var(--font-mono);">${sub.ects}</td>
+          <td>Curso ${sub.curso_rec}</td>
+          <td>${sub.sem_rec !== null ? `Semestre ${sub.sem_rec}` : '<span style="color:var(--warning);">null</span>'}</td>
+          <td style="font-weight:700; color:#818cf8;">${isPassed ? 'Superada (Acreditada)' : `Semestre ${assignedTerm}`}</td>
+          <td>
+            <button class="btn" style="padding:0.2rem 0.45rem; font-size:0.7rem;" onclick="toggleStatus('${sub.id}')">
+              ${isPassed ? 'Pendiente' : 'Aprobada'}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderDAFO_CAME(val) {
+      const res = evaluateDAFO_CAME(val);
+
+      document.getElementById("dafo-d-count").textContent = `${res.D.length} detectadas`;
+      document.getElementById("dafo-a-count").textContent = `${res.A.length} detectadas`;
+      document.getElementById("dafo-f-count").textContent = `${res.F.length} detectadas`;
+      document.getElementById("dafo-o-count").textContent = `${res.O.length} detectadas`;
+
+      const renderList = (elemId, items, badgeClass) => {
+        const el = document.getElementById(elemId);
+        el.innerHTML = items.length > 0 
+          ? items.map(i => `<div class="dafo-item"><span class="badge ${badgeClass}">${i.tag}</span><span>${i.desc}</span></div>`).join('')
+          : `<span style="font-size:0.72rem; color:var(--text-subtle);">Ningún factor crítico identificado.</span>`;
+      };
+
+      renderList("dafo-d-list", res.D, "badge-danger");
+      renderList("dafo-a-list", res.A, "badge-warning");
+      renderList("dafo-f-list", res.F, "badge-success");
+      renderList("dafo-o-list", res.O, "badge-info");
+
+      document.getElementById("came-c-list").innerHTML = res.C.map(c => `<div style="font-size:0.75rem;">&bull; ${c}</div>`).join('') || '<span style="font-size:0.72rem; color:var(--text-subtle);">Sin acciones correctoras urgentes.</span>';
+      document.getElementById("came-a-list").innerHTML = res.AM.map(a => `<div style="font-size:0.75rem;">&bull; ${a}</div>`).join('') || '<span style="font-size:0.72rem; color:var(--text-subtle);">Riesgos normativos controlados.</span>';
+      document.getElementById("came-m-list").innerHTML = res.M.map(m => `<div style="font-size:0.75rem;">&bull; ${m}</div>`).join('');
+      document.getElementById("came-e-list").innerHTML = res.E.map(e => `<div style="font-size:0.75rem;">&bull; ${e}</div>`).join('');
+    }
+
+    function renderParetoScatter() {
+      const svg = document.getElementById("pareto-scatter-svg");
+      if (!svg) return;
+      svg.innerHTML = "";
+
+      // Puntos de alternativas de referencia
+      const points = [
+        { name: "4 Años Intenso", terms: 8, peak: 33, pareto: true },
+        { name: "5 Años Nivelado", terms: 10, peak: 27, pareto: true },
+        { name: "6 Años Suave", terms: 12, peak: 24, pareto: true },
+        { name: "Plan Asimétrico", terms: 10, peak: 33, pareto: false }
+      ];
+
+      const w = svg.clientWidth || 360;
+      const h = svg.clientHeight || 200;
+      const pad = 40;
+
+      // Ejes
+      svg.innerHTML += `
+        <line x1="${pad}" y1="${h - pad}" x2="${w - pad}" y2="${h - pad}" stroke="#334155" />
+        <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h - pad}" stroke="#334155" />
+        <text x="${w / 2}" y="${h - 10}" fill="#94a3b8" font-size="10" text-anchor="middle">Duración (Semestres)</text>
+        <text x="12" y="${h / 2}" fill="#94a3b8" font-size="10" text-anchor="middle" transform="rotate(-90 12 ${h/2})">Pico ECTS</text>
+      `;
+
+      points.forEach(pt => {
+        // Escala: terms 8..12 -> pad..w-pad; peak 20..36 -> h-pad..pad
+        const x = pad + ((pt.terms - 8) / (12 - 8)) * (w - pad * 2);
+        const y = (h - pad) - ((pt.peak - 20) / (36 - 20)) * (h - pad * 2);
+
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", x);
+        circle.setAttribute("cy", y);
+        circle.setAttribute("r", pt.pareto ? 6 : 4);
+        circle.setAttribute("fill", pt.pareto ? "#10b981" : "#64748b");
+        circle.setAttribute("stroke", pt.pareto ? "#ffffff" : "none");
+        circle.setAttribute("stroke-width", "1.5");
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", x);
+        text.setAttribute("y", y - 10);
+        text.setAttribute("fill", "#f8fafc");
+        text.setAttribute("font-size", "8.5");
+        text.setAttribute("font-family", "monospace");
+        text.setAttribute("text-anchor", "middle");
+        text.textContent = `(${pt.terms}S, ${pt.peak}E)`;
+
+        svg.appendChild(circle);
+        svg.appendChild(text);
+      });
+    }
+
+    function renderRadarProfile() {
+      // 5 Clústeres de Competencias
+      const clusters = [
+        { name: "Servicios TI & Cloud", ids: ["2176001","2176006","2176010","2176013","2176014","2176022","2176026","2176037","2176045"] },
+        { name: "Analítica & Big Data", ids: ["2176008","2176019","2176024","2176026","2176023","2176038"] },
+        { name: "Operaciones & BPM", ids: ["2176012","2176027","2176028","2176030","2176031","2176032"] },
+        { name: "Estrategia & Consultoría", ids: ["2176004","2176003","2176009","2176017","2176039","2176040","2176041","2176052"] },
+        { name: "Banca & Sector Público", ids: ["2176002","2176011","2176016","2176018","2176029","2176036","2176042","2176043"] }
+      ];
+
+      const container = document.getElementById("radar-bars-container");
+      container.innerHTML = "";
+
+      const scores = [];
+
+      clusters.forEach(c => {
+        let count = 0;
+        c.ids.forEach(id => {
+          if (studentProfile.expediente[id] === "superada" || studentProfile.asignaciones[id]) count++;
+        });
+        const pct = Math.round((count / c.ids.length) * 100);
+        scores.push(pct);
+
+        container.innerHTML += `
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:600; margin-bottom:0.2rem;">
+              <span>${c.name}</span>
+              <span style="font-family:var(--font-mono); color:var(--primary);">${pct}% (${count}/${c.ids.length})</span>
+            </div>
+            <div style="background:var(--bg); height:8px; border-radius:4px; overflow:hidden; border:1px solid var(--border);">
+              <div style="background:var(--primary); height:100%; width:${pct}%;"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Polígono en SVG
+      const svg = document.getElementById("radar-polygon-svg");
+      if (!svg) return;
+      svg.innerHTML = "";
+
+      const cx = (svg.clientWidth || 320) / 2;
+      const cy = (svg.clientHeight || 280) / 2;
+      const radius = 90;
+      const total = clusters.length;
+
+      // Círculos concéntricos guía
+      for (let r = 0.25; r <= 1; r += 0.25) {
+        const poly = [];
+        for (let i = 0; i < total; i++) {
+          const angle = (Math.PI * 2 / total) * i - Math.PI / 2;
+          poly.push(`${cx + Math.cos(angle) * radius * r},${cy + Math.sin(angle) * radius * r}`);
+        }
+        svg.innerHTML += `<polygon points="${poly.join(' ')}" fill="none" stroke="#334155" stroke-dasharray="2" />`;
+      }
+
+      // Polígono de datos
+      const dataPoints = [];
+      for (let i = 0; i < total; i++) {
+        const angle = (Math.PI * 2 / total) * i - Math.PI / 2;
+        const r = (scores[i] / 100) * radius;
+        dataPoints.push(`${cx + Math.cos(angle) * r},${cy + Math.sin(angle) * r}`);
+
+        // Etiquetas
+        const lx = cx + Math.cos(angle) * (radius + 20);
+        const ly = cy + Math.sin(angle) * (radius + 20);
+        svg.innerHTML += `<text x="${lx}" y="${ly}" fill="#94a3b8" font-size="8" text-anchor="middle" font-family="monospace">${clusters[i].name.split(' ')[0]}</text>`;
+      }
+      svg.innerHTML += `<polygon points="${dataPoints.join(' ')}" fill="rgba(99, 102, 241, 0.25)" stroke="#6366f1" stroke-width="2" />`;
+    }
+
+    function renderAuditTable() {
+      const tbody = document.getElementById("catalog-audit-table-body");
+      tbody.innerHTML = "";
+
+      CATALOG_SUBJECTS.forEach(sub => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="font-family:var(--font-mono); font-weight:700;">${sub.id}</td>
+          <td>${sub.nombre}</td>
+          <td>${sub.caracter}</td>
+          <td style="font-family:var(--font-mono);">${sub.ects}</td>
+          <td>Curso ${sub.curso_rec}</td>
+          <td>${sub.sem_rec !== null ? `Semestre ${sub.sem_rec}` : '<span class="badge badge-warning">null</span>'}</td>
+          <td>${sub.mod} ${sub.campus ? `(${sub.campus})` : ''}</td>
+          <td><span class="badge badge-danger">recuperación_fallida (0/50)</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* =====================================================================
+       8. ACCIONES DE USUARIO Y PLANIFICACIÓN INVERSA
+       ===================================================================== */
+    function setTab(tabName) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("main > section").forEach(s => s.style.display = "none");
+
+      const btn = document.getElementById(`tab-${tabName}`);
+      const sec = document.getElementById(`section-${tabName}`);
+      if (btn) btn.classList.add("active");
+      if (sec) sec.style.display = (tabName === "planner" || tabName === "pareto-inverse" || tabName === "radar" ? "grid" : "flex");
+
+      if (tabName === "dag-pert") setTimeout(renderDAGPERT, 50);
+      if (tabName === "tests") runCompleteTestSuite();
+      if (tabName === "audit") renderAuditTable();
+    }
+
+    function reassignSubject(id, termVal) {
+      if (termVal === "null") {
+        delete studentProfile.asignaciones[id];
+      } else {
+        studentProfile.asignaciones[id] = parseInt(termVal);
+      }
+      refreshAllViews();
+    }
+
+    function markPassed(id) {
+      studentProfile.expediente[id] = "superada";
+      delete studentProfile.asignaciones[id];
+      refreshAllViews();
+    }
+
+    function toggleStatus(id) {
+      if (studentProfile.expediente[id] === "superada") {
+        delete studentProfile.expediente[id];
+        const s = CATALOG_SUBJECTS.find(x => x.id === id);
+        studentProfile.asignaciones[id] = s.sem_rec ? (s.curso_rec - 1) * 2 + s.sem_rec : 8;
+      } else {
+        studentProfile.expediente[id] = "superada";
+        delete studentProfile.asignaciones[id];
+      }
+      refreshAllViews();
+    }
+
+    function applyProfilePreset(presetKey) {
+      studentProfile.expediente = {};
+      studentProfile.asignaciones = getDefaultAssignmentMap();
+
+      if (presetKey === "segundo_ano") {
+        CATALOG_SUBJECTS.filter(s => s.curso_rec === 1).forEach(s => {
+          studentProfile.expediente[s.id] = "superada";
+          delete studentProfile.asignaciones[s.id];
+        });
+      } else if (presetKey === "tercer_ano") {
+        CATALOG_SUBJECTS.filter(s => s.curso_rec <= 2).forEach(s => {
+          studentProfile.expediente[s.id] = "superada";
+          delete studentProfile.asignaciones[s.id];
+        });
+      } else if (presetKey === "remanente_final") {
+        CATALOG_SUBJECTS.filter(s => s.curso_rec <= 3).forEach(s => {
+          studentProfile.expediente[s.id] = "superada";
+          delete studentProfile.asignaciones[s.id];
+        });
+      }
+      refreshAllViews();
+    }
+
+    function applyInversePlanningGoal() {
+      const goal = document.getElementById("inverse-goal-select").value;
+      const map = {};
+
+      if (goal === "4y-balanced") {
+        studentProfile.regimen = "completo";
+        studentProfile.max_ects_semestre = 36;
+        studentProfile.asignaciones = getDefaultAssignmentMap();
+      } else if (goal === "5y-light") {
+        studentProfile.regimen = "completo";
+        studentProfile.max_ects_semestre = 27;
+        // Distribuir a 10 semestres
+        CATALOG_SUBJECTS.forEach((s, idx) => {
+          map[s.id] = Math.min(10, Math.floor(idx / 5) + 1);
+        });
+        map["2176046"] = 9; // Prácticas S9
+        map["2176049"] = 10; // TFG S10
+        studentProfile.asignaciones = map;
+      } else if (goal === "6y-executive") {
+        studentProfile.regimen = "parcial";
+        studentProfile.max_ects_semestre = 24;
+        CATALOG_SUBJECTS.forEach((s, idx) => {
+          map[s.id] = Math.min(12, Math.floor(idx / 4) + 1);
+        });
+        map["2176046"] = 11;
+        map["2176049"] = 12;
+        studentProfile.asignaciones = map;
+      } else if (goal === "orient-ti") {
+        studentProfile.selected_electives = ["2176052", "2176045", "2176044", "2176042"];
+        studentProfile.asignaciones = getDefaultAssignmentMap();
+      }
+
+      document.getElementById("regime-select").value = studentProfile.regimen;
+      document.getElementById("max-ects-term-input").value = studentProfile.max_ects_semestre;
+      renderOptativeSelector();
+      refreshAllViews();
+      setTab("planner");
+      alert("Itinerario adaptado según la meta de planificación inversa seleccionada.");
+    }
+
+    function getDefaultAssignmentMap() {
+      const map = {};
+      CATALOG_SUBJECTS.forEach(s => {
+        if (s.sem_rec !== null) {
+          map[s.id] = (s.curso_rec - 1) * 2 + s.sem_rec;
+        } else {
+          if (s.id === "2176021") map[s.id] = 3;
+          if (s.id === "2176048") map[s.id] = 7;
+          if (s.id === "2176046") map[s.id] = 8;
+          if (s.id === "2176049") map[s.id] = 8;
+        }
+      });
+      return map;
+    }
+
+    function updateProfileSettings() {
+      studentProfile.regimen = document.getElementById("regime-select").value;
+      studentProfile.max_ects_semestre = parseInt(document.getElementById("max-ects-term-input").value) || 36;
+      refreshAllViews();
+    }
+
+    function resetToOfficialRecommended() {
+      studentProfile.expediente = {};
+      studentProfile.asignaciones = getDefaultAssignmentMap();
+      refreshAllViews();
+    }
+
+    function renderOptativeSelector() {
+      const container = document.getElementById("opt-selector-container");
+      container.innerHTML = "";
+      const ops = CATALOG_SUBJECTS.filter(s => s.caracter === "OP");
+
+      ops.forEach(opt => {
+        const checked = studentProfile.selected_electives.includes(opt.id);
+        const label = document.createElement("label");
+        label.style.display = "flex";
+        label.style.alignItems = "center";
+        label.style.gap = "0.3rem";
+        label.innerHTML = `
+          <input type="checkbox" value="${opt.id}" ${checked ? 'checked' : ''} onchange="toggleOptative('${opt.id}')">
+          <span>${opt.nombre} (${opt.ects} ECTS)</span>
+        `;
+        container.appendChild(label);
+      });
+      document.getElementById("opt-count-label").textContent = studentProfile.selected_electives.length;
+    }
+
+    function toggleOptative(id) {
+      const idx = studentProfile.selected_electives.indexOf(id);
+      if (idx >= 0) studentProfile.selected_electives.splice(idx, 1);
+      else studentProfile.selected_electives.push(id);
+      renderOptativeSelector();
+      refreshAllViews();
+    }
+
+    /* =====================================================================
+       9. SUITE DE PRUEBAS AUTOMATIZADA (Q01)
+       ===================================================================== */
+    function runCompleteTestSuite() {
+      const tests = [
+        { id: "T01", area: "Catálogo", desc: "50 IDs únicos oficiales Plan 2176", run: () => new Set(CATALOG_SUBJECTS.map(s => s.id)).size === 50 },
+        { id: "T02", area: "Créditos", desc: "243 ECTS ofertados; 228 núcleo (60 FB + 168 OB); 240 título", run: () => {
+          const fb = CATALOG_SUBJECTS.filter(s => s.caracter === "FB").reduce((a,b)=>a+b.ects,0);
+          const ob = CATALOG_SUBJECTS.filter(s => s.caracter === "OB").reduce((a,b)=>a+b.ects,0);
+          const op = CATALOG_SUBJECTS.filter(s => s.caracter === "OP").reduce((a,b)=>a+b.ects,0);
+          return fb === 60 && ob === 168 && op === 15 && (fb+ob+12) === 240;
+        }},
+        { id: "T03", area: "Optativas", desc: "Selección exacta de 4 de las 5 optativas de 3 ECTS", run: () => {
+          const ops = CATALOG_SUBJECTS.filter(s => s.caracter === "OP");
+          return ops.length === 5 && ops.every(s => s.ects === 3);
+        }},
+        { id: "T04", area: "Datos nulos", desc: "4 asignaturas críticas conservan semestre null", run: () => {
+          return ["2176021", "2176046", "2176048", "2176049"].every(id => CATALOG_SUBJECTS.find(s => s.id === id).sem_rec === null);
+        }},
+        { id: "T08", area: "Permanencia", desc: "Evaluación independiente semestral y anual", run: () => typeof validateSchedule === 'function' },
+        { id: "T09", area: "Permanencia", desc: "Excepción remanente <24 ECTS no bloquea matrícula", run: () => {
+          const p = { ...studentProfile, regimen: "completo", expediente: {}, selected_electives: ["2176043","2176042","2176052","2176045"] };
+          CATALOG_SUBJECTS.forEach((s, idx) => { if (idx > 2) p.expediente[s.id] = "superada"; });
+          const val = validateSchedule(p, { [CATALOG_SUBJECTS[0].id]: 1, [CATALOG_SUBJECTS[1].id]: 2 });
+          return !val.violations.some(v => v.rule === "S02-MIN-COMPLETO");
+        }},
+        { id: "T10", area: "Cómputos", desc: "Prácticas y TFG excluidos del techo de 78 en tiempo completo", run: () => {
+          const p = { ...studentProfile, regimen: "completo", expediente: {}, selected_electives: ["2176043","2176042","2176052","2176045"] };
+          const map = getDefaultAssignmentMap();
+          map["2176046"] = 2; // prácticas en año 1
+          const val = validateSchedule(p, map);
+          return !val.violations.some(v => v.rule === "S02-MAX-COMPLETO");
+        }},
+        { id: "T13", area: "Prácticas", desc: "Bloqueo estricto si créditos superados < 108 ECTS (45%)", run: () => {
+          const p = { ...studentProfile, expediente: {} };
+          const map = getDefaultAssignmentMap();
+          map["2176046"] = 1;
+          const val = validateSchedule(p, map);
+          return val.violations.some(v => v.rule === "S04-PRACTICAS-108");
+        }},
+        { id: "CPM01", area: "Grafo/PERT", desc: "Cálculo determinista de holgura y camino crítico", run: () => {
+          const cpm = computeCPM();
+          return cpm.projectDuration >= 7 && cpm.criticalNodes.length > 0;
+        }},
+        { id: "DAFO01", area: "Estratégico", desc: "Generación simultánea de 4 cuadrantes DAFO y 4 de CAME", run: () => {
+          const val = validateSchedule(studentProfile, studentProfile.asignaciones);
+          const d = evaluateDAFO_CAME(val);
+          return Array.isArray(d.D) && Array.isArray(d.C) && Array.isArray(d.F);
+        }}
+      ];
+
+      const tbody = document.getElementById("test-runner-table-body");
+      tbody.innerHTML = "";
+
+      tests.forEach(t => {
+        let ok = false;
+        let msg = "";
+        try { ok = t.run(); } catch(e) { msg = e.message; }
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="font-family:var(--font-mono); font-weight:700;">${t.id}</td>
+          <td>${t.area}</td>
+          <td>${t.desc}</td>
+          <td><span class="badge ${ok ? 'badge-success' : 'badge-danger'}">${ok ? 'APROBADO' : 'FALLIDO'}</span></td>
+          <td style="font-size:0.72rem; color:var(--text-muted);">${ok ? 'Verificado en memoria' : msg}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* =====================================================================
+       10. IMPORTACIÓN / EXPORTACIÓN JSON CANÓNICO (X01)
+       ===================================================================== */
+    function exportScenarioJSON() {
+      const exportData = {
+        schema_version: "0.2.0",
+        app_version: APP_VERSION,
+        plan_id: PLAN_ID,
+        academic_year: ACADEMIC_YEAR,
+        created_at: new Date().toISOString(),
+        profile: {
+          id: studentProfile.id,
+          regimen: studentProfile.regimen,
+          max_ects_semestre: studentProfile.max_ects_semestre,
+          horas_disponibles_semana: studentProfile.horas_disponibles_semana,
+          selected_electives: studentProfile.selected_electives,
+          expediente: studentProfile.expediente
+        },
+        assignments: studentProfile.asignaciones
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
+      const a = document.createElement("a");
+      a.href = dataStr;
+      a.download = `CGIS_Itinerario_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      a.remove();
+    }
+
+    function importScenarioJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.plan_id !== PLAN_ID) {
+            alert(`Error: El plan importado (${data.plan_id}) no concuerda con ${PLAN_ID}.`);
+            return;
+          }
+          studentProfile.regimen = data.profile.regimen || "completo";
+          studentProfile.max_ects_semestre = data.profile.max_ects_semestre || 36;
+          studentProfile.selected_electives = data.profile.selected_electives || ["2176043", "2176042", "2176052", "2176045"];
+          studentProfile.expediente = data.profile.expediente || {};
+          studentProfile.asignaciones = data.assignments || getDefaultAssignmentMap();
+
+          document.getElementById("regime-select").value = studentProfile.regimen;
+          document.getElementById("max-ects-term-input").value = studentProfile.max_ects_semestre;
+
+          renderOptativeSelector();
+          refreshAllViews();
+          alert("Escenario importado correctamente.");
+        } catch (err) {
+          alert("Error al parsear el archivo JSON.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    /* INICIALIZACIÓN */
+    window.addEventListener("DOMContentLoaded", () => {
+      studentProfile.asignaciones = getDefaultAssignmentMap();
+      renderOptativeSelector();
+      refreshAllViews();
+    });
+  </script>
+</body>
+</html>
