@@ -2,133 +2,224 @@
 <html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>CGIS-Itinerarios · Laboratorio de Planificación</title>
 <style>
-:root[data-theme="dinosaurio"]{--bg:#050a12;--surf:#0b1526;--elev:#11223b;--card:#0e1d33;--hov:#173052;--bdr:#1e3a5f;--bdr-s:#132742;--txt:#f0f6fc;--mut:#94a3b8;--sub:#64748b;--pri:#0ea5e9;--pri-h:#0284c7;--pri-s:rgba(14,165,233,0.16);--cyan:#00d2ff;--ok:#38bdf8;--ok-s:rgba(56,189,248,0.18);--warn:#f59e0b;--warn-s:rgba(245,158,11,0.16);--err:#f43f5e;--err-s:rgba(244,63,94,0.16);--inf:#60a5fa;--inf-s:rgba(96,165,250,0.16);--shd:0 6px 24px -4px rgba(0,0,0,0.75)}
+:root[data-theme="dark"]{--bg:#050a12;--surf:#0b1526;--elev:#11223b;--card:#0e1d33;--hov:#173052;--bdr:#1e3a5f;--bdr-s:#132742;--txt:#f0f6fc;--mut:#94a3b8;--sub:#64748b;--pri:#0ea5e9;--pri-h:#0284c7;--pri-s:rgba(14,165,233,0.16);--cyan:#00d2ff;--ok:#38bdf8;--ok-s:rgba(56,189,248,0.18);--warn:#f59e0b;--warn-s:rgba(245,158,11,0.16);--err:#f43f5e;--err-s:rgba(244,63,94,0.16);--inf:#60a5fa;--inf-s:rgba(96,165,250,0.16);--shd:0 6px 24px -4px rgba(0,0,0,0.75)}
 :root[data-theme="light"]{--bg:#eef2f6;--surf:#ffffff;--elev:#f1f5f9;--card:#ffffff;--hov:#e2e8f0;--bdr:#cbd5e1;--bdr-s:#e2e8f0;--txt:#0f172a;--mut:#334155;--sub:#64748b;--pri:#0284c7;--pri-h:#0369a1;--pri-s:rgba(2,132,199,0.12);--cyan:#0369a1;--ok:#0284c7;--ok-s:rgba(2,132,199,0.14);--warn:#d97706;--warn-s:rgba(217,119,6,0.12);--err:#e11d48;--err-s:rgba(225,29,72,0.12);--inf:#2563eb;--inf-s:rgba(37,99,235,0.12);--shd:0 4px 14px -2px rgba(15,23,42,0.08)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.48;min-height:100vh;display:flex;flex-direction:column}
-header{background:linear-gradient(180deg,#0d1b30 0%,var(--surf) 100%);border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:40;box-shadow:var(--shd)}
-.h-top{max-width:1500px;margin:0 auto;padding:0.7rem 1.25rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:0.8rem}
-.brand{display:flex;align-items:center;gap:0.75rem}
-.logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,#0284c7,#00d2ff);border:1px solid var(--cyan);color:#050a12;font-weight:900;font-family:ui-monospace,monospace;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(0,210,255,0.3)}
-.kpi-bar{display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap}
-.pill{background:var(--elev);border:1px solid var(--bdr);padding:0.3rem 0.68rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:0.38rem}
-.k-val{font-weight:700;font-family:ui-monospace,monospace}
-.nav-bar{max-width:1500px;margin:0 auto;padding:0 1.25rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bdr-s);overflow-x:auto}
-.tabs{display:flex;align-items:center;gap:0.2rem}
-.tab-btn{background:transparent;border:none;border-bottom:3px solid transparent;color:var(--mut);padding:0.65rem 0.9rem;cursor:pointer;font-weight:600;font-size:0.81rem;white-space:nowrap;transition:0.15s}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;font-size:14.5px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column;-webkit-text-size-adjust:100%}
+
+/* CABECERA LIGERA Y ESTABLE EN MÓVIL Y ESCRITORIO */
+header{background:var(--surf);border-bottom:1px solid var(--bdr);width:100%;z-index:40;box-shadow:var(--shd)}
+.h-top{max-width:1440px;margin:0 auto;padding:0.65rem 1rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:0.6rem}
+.brand{display:flex;align-items:center;gap:0.65rem;min-width:0}
+.logo{width:36px;height:36px;flex-shrink:0;border-radius:8px;background:linear-gradient(135deg,#0284c7,#00d2ff);border:1px solid var(--cyan);color:#050a12;font-weight:900;font-family:ui-monospace,monospace;display:flex;align-items:center;justify-content:center}
+.brand-title{font-size:1rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h-actions{display:flex;gap:0.35rem;align-items:center;flex-wrap:wrap}
+
+/* BARRA DE PESTAÑAS CON SCROLL TÁCTIL LIMPIO */
+.nav-bar{max-width:1440px;margin:0 auto;padding:0 1rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--bdr-s);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:0.4rem}
+.nav-bar::-webkit-scrollbar{display:none}
+.tabs{display:flex;align-items:center;gap:0.15rem;flex-shrink:0}
+.tab-btn{background:transparent;border:none;border-bottom:3px solid transparent;color:var(--mut);padding:0.65rem 0.85rem;cursor:pointer;font-weight:600;font-size:0.82rem;white-space:nowrap;transition:0.15s}
 .tab-btn:hover{color:var(--txt);background:var(--elev)}
 .tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan);background:var(--pri-s)}
-.alert-tab-btn{margin-left:0.4rem;padding:0.36rem 0.75rem;border-radius:6px;font-family:ui-monospace,monospace;font-size:0.75rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:0.35rem;border:1px solid var(--bdr);background:var(--elev);color:var(--txt);transition:0.15s}
+.alert-tab-btn{padding:0.35rem 0.7rem;border-radius:6px;font-family:ui-monospace,monospace;font-size:0.74rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:0.3rem;border:1px solid var(--bdr);background:var(--elev);color:var(--txt);white-space:nowrap;flex-shrink:0;margin:0.3rem 0}
 .alert-tab-btn.st-ok{border-color:var(--cyan);background:var(--pri-s);color:var(--cyan)}
 .alert-tab-btn.st-warn{border-color:var(--warn);background:var(--warn-s);color:var(--warn)}
 .alert-tab-btn.st-err{border-color:var(--err);background:var(--err-s);color:var(--err)}
-#norm-drawer{display:none;max-width:1500px;width:100%;margin:0.75rem auto 0;padding:0 1.25rem}
+
+/* BANDA DE RESUMEN KPI (FUERA DE LA CABECERA FLOTANTE PARA NO SATURAR MÓVILES) */
+.kpi-strip-wrap{max-width:1440px;width:100%;margin:0.85rem auto 0;padding:0 1rem}
+.kpi-bar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0.55rem}
+.pill{background:var(--surf);border:1px solid var(--bdr);padding:0.5rem 0.75rem;border-radius:8px;font-size:0.76rem;display:flex;flex-direction:column;gap:0.15rem}
+.pill-lbl{color:var(--mut);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.3px}
+.k-val{font-weight:800;font-size:0.95rem;font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+#norm-drawer{display:none;max-width:1440px;width:100%;margin:0.75rem auto 0;padding:0 1rem}
 #norm-drawer.open{display:block}
-.drawer-box{border-radius:8px;padding:0.85rem 1.15rem;border:1px solid var(--bdr);background:var(--surf);box-shadow:var(--shd);display:flex;flex-direction:column;gap:0.45rem}
-main{flex:1;max-width:1500px;width:100%;margin:0 auto;padding:1.15rem 1.25rem;display:flex;flex-direction:column;gap:1.15rem}
-.card{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:1.1rem;display:flex;flex-direction:column;gap:0.8rem;box-shadow:var(--shd)}
+.drawer-box{border-radius:10px;padding:0.9rem 1.1rem;border:1px solid var(--bdr);background:var(--surf);box-shadow:var(--shd);display:flex;flex-direction:column;gap:0.5rem}
+
+main{flex:1;max-width:1440px;width:100%;margin:0 auto;padding:0.9rem 1rem 1.5rem;display:flex;flex-direction:column;gap:1.1rem}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:1.1rem;display:flex;flex-direction:column;gap:0.85rem;box-shadow:var(--shd);min-width:0}
 .c-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
-.c-title{font-size:0.95rem;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:0.45rem}
-.c-sub{font-size:0.78rem;color:var(--mut)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;padding:0.45rem 0.85rem;border-radius:6px;font-weight:600;font-size:0.8rem;cursor:pointer;border:1px solid var(--bdr);background:var(--elev);color:var(--txt);transition:0.15s}
+.c-title{font-size:0.98rem;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:0.45rem}
+.c-sub{font-size:0.8rem;color:var(--mut);line-height:1.45}
+
+/* BOTONES Y CONTROLES TÁCTILES (MÍNIMO 36PX ALTURA EN MÓVIL) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;padding:0.48rem 0.85rem;border-radius:7px;font-weight:600;font-size:0.82rem;cursor:pointer;border:1px solid var(--bdr);background:var(--elev);color:var(--txt);transition:0.15s;white-space:nowrap}
 .btn:hover:not(:disabled){background:var(--hov);border-color:var(--cyan)}
 .btn-pri{background:var(--pri);border-color:var(--cyan);color:#fff}
-.btn-pri:hover:not(:disabled){background:var(--pri-h)}
 .btn-blue{background:#0284c7;border-color:var(--cyan);color:#fff}
 .btn-blue:hover:not(:disabled){background:#0369a1}
-.btn-sm{padding:0.24rem 0.55rem;font-size:0.72rem;border-radius:5px}
-select,input,textarea{background:var(--elev);border:1px solid var(--bdr);color:var(--txt);padding:0.42rem 0.6rem;border-radius:6px;font-size:0.81rem;font-family:inherit;outline:none}
+.btn-sm{padding:0.3rem 0.6rem;font-size:0.75rem;border-radius:6px}
+select,input,textarea{background:var(--elev);border:1px solid var(--bdr);color:var(--txt);padding:0.48rem 0.65rem;border-radius:7px;font-size:0.84rem;font-family:inherit;outline:none;max-width:100%}
 select:focus,input:focus,textarea:focus{border-color:var(--cyan)}
-.bdg{display:inline-flex;align-items:center;padding:0.14rem 0.5rem;border-radius:4px;font-size:0.71rem;font-weight:700;font-family:ui-monospace,monospace;letter-spacing:0.2px}
+.bdg{display:inline-flex;align-items:center;padding:0.16rem 0.5rem;border-radius:5px;font-size:0.72rem;font-weight:700;font-family:ui-monospace,monospace}
 .b-pri{color:var(--cyan);background:var(--pri-s);border:1px solid rgba(0,210,255,0.3)}
 .b-ok{color:#38bdf8;background:rgba(56,189,248,0.16);border:1px solid rgba(56,189,248,0.4)}
 .b-warn{color:var(--warn);background:var(--warn-s);border:1px solid rgba(245,158,11,0.35)}
 .b-err{color:var(--err);background:var(--err-s);border:1px solid rgba(244,63,94,0.35)}
 .b-inf{color:var(--inf);background:var(--inf-s);border:1px solid rgba(96,165,250,0.3)}
-.p-layout{display:grid;grid-template-columns:315px 1fr;gap:1.15rem;align-items:start}
-@media (max-width:1024px){.p-layout{grid-template-columns:1fr}}
-.y-block{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;margin-bottom:1.15rem;box-shadow:var(--shd)}
-.y-head{background:linear-gradient(90deg,var(--elev) 0%,var(--surf) 100%);padding:0.65rem 1.1rem;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
-.y-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;padding:1rem}
-.sem-col{background:var(--bg);border:1px solid var(--bdr-s);border-radius:8px;padding:0.8rem;min-height:200px;display:flex;flex-direction:column;gap:0.65rem}
+
+/* LAYOUT PRINCIPAL: SIDEBAR + TABLERO */
+.p-layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:1.15rem;align-items:start}
+
+/* ACORDEONES LIMPIOS PARA EVITAR RUIDO VISUAL */
+details.clean-acc{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;box-shadow:var(--shd)}
+details.clean-acc summary{padding:0.85rem 1.05rem;font-weight:700;font-size:0.9rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;background:var(--elev);color:var(--txt)}
+details.clean-acc summary::-webkit-details-marker{display:none}
+details.clean-acc summary::after{content:"▾";font-size:0.8rem;color:var(--cyan);transition:transform 0.2s}
+details.clean-acc[open] summary::after{transform:rotate(180deg)}
+.acc-body{padding:1rem;display:flex;flex-direction:column;gap:0.75rem;border-top:1px solid var(--bdr)}
+
+/* SELECTOR DE AÑO ACADÉMICO PARA REDUCIR DENSIDAD EN PANTALLA */
+.year-switcher{display:flex;gap:0.4rem;flex-wrap:wrap;background:var(--surf);padding:0.5rem;border-radius:10px;border:1px solid var(--bdr)}
+.y-tab{flex:1;min-width:110px;padding:0.55rem 0.75rem;border-radius:7px;border:1px solid transparent;background:var(--elev);color:var(--mut);cursor:pointer;font-weight:700;font-size:0.82rem;text-align:center;transition:0.15s;display:flex;flex-direction:column;align-items:center;gap:0.15rem}
+.y-tab:hover{color:var(--txt);border-color:var(--bdr)}
+.y-tab.active{background:var(--pri-s);color:var(--cyan);border-color:var(--cyan)}
+.y-tab-sub{font-size:0.68rem;font-family:ui-monospace,monospace;font-weight:600;opacity:0.85}
+
+/* BLOQUES ANUALES Y COLUMNAS SEMESTRALES AMPLIAS */
+.y-block{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;margin-bottom:1.1rem;box-shadow:var(--shd)}
+.y-head{background:linear-gradient(90deg,var(--elev) 0%,var(--surf) 100%);padding:0.75rem 1.1rem;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+.y-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.1rem;padding:1.1rem}
+.sem-col{background:var(--bg);border:1px solid var(--bdr-s);border-radius:10px;padding:0.95rem;min-height:220px;display:flex;flex-direction:column;gap:0.75rem;min-width:0}
 .sem-col.drag-over{border-color:var(--cyan);background:var(--pri-s)}
 .pbar{width:100%;height:6px;background:var(--elev);border-radius:999px;overflow:hidden}
 .pfill{height:100%;border-radius:999px;transition:width 0.25s}
-.s-card{background:var(--card);border:1px solid var(--bdr);border-left:5px solid var(--pri);border-radius:8px;padding:0.75rem 0.9rem;display:flex;flex-direction:column;gap:0.45rem;cursor:grab;transition:0.12s}
-.s-card:hover{transform:translateY(-1px);border-color:var(--cyan);box-shadow:0 4px 14px rgba(0,210,255,0.14)}
+
+/* TARJETAS DE ASIGNATURA ESPACIOSAS Y MUY LEGIBLES */
+.s-card{background:var(--card);border:1px solid var(--bdr);border-left:5px solid var(--pri);border-radius:9px;padding:0.85rem 1rem;display:flex;flex-direction:column;gap:0.55rem;cursor:grab;transition:0.12s;min-width:0}
+.s-card:hover{border-color:var(--cyan);box-shadow:0 4px 14px rgba(0,210,255,0.14)}
 .s-card.st-passed{border-left-color:#0284c7;background:rgba(14,165,233,0.08);cursor:default}
 .s-card.st-incourse{border-left-color:var(--warn);background:rgba(245,158,11,0.08)}
 .s-card.st-pending{border-left-color:var(--cyan)}
 .s-card.crit{border-left-color:var(--err)!important;box-shadow:0 0 0 1px var(--err)}
-.s-meta{display:flex;justify-content:space-between;align-items:center;gap:0.4rem;font-family:ui-monospace,monospace;font-size:0.75rem}
-.s-code{color:var(--cyan);font-weight:800;letter-spacing:0.3px}
-.s-title{font-weight:700;font-size:0.93rem;color:var(--txt);line-height:1.34;cursor:pointer}
+.s-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.35rem;font-family:ui-monospace,monospace;font-size:0.76rem}
+.s-code{color:var(--cyan);font-weight:800}
+.s-title{font-weight:700;font-size:0.98rem;color:var(--txt);line-height:1.38;cursor:pointer;word-break:break-word}
 .s-title:hover{color:var(--cyan);text-decoration:underline}
-.s-ctrl{display:flex;justify-content:space-between;align-items:center;gap:0.4rem;margin-top:0.15rem;padding-top:0.45rem;border-top:1px solid var(--bdr-s)}
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.1rem}
-.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.1rem}
-.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.85rem}
-.grid-5{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:0.75rem}
-.tbl-w{overflow-x:auto;border:1px solid var(--bdr);border-radius:8px}
-table{width:100%;border-collapse:collapse;text-align:left;font-size:0.81rem}
-th,td{padding:0.6rem 0.8rem;border-bottom:1px solid var(--bdr-s)}
-th{background:var(--elev);font-size:0.71rem;text-transform:uppercase;color:var(--cyan);font-family:ui-monospace,monospace}
-.modal-bg{position:fixed;inset:0;background:rgba(3,7,15,0.78);backdrop-filter:blur(4px);z-index:60;display:none;align-items:center;justify-content:center;padding:1rem}
+.s-ctrl{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.45rem;margin-top:0.15rem;padding-top:0.55rem;border-top:1px solid var(--bdr-s)}
+
+/* GRILLAS RESPONSIVE SIN DESBORDAMIENTO EN MÓVILES */
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.1rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0.85rem}
+.grid-5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0.75rem}
+
+.tbl-w{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--bdr);border-radius:8px;max-width:100%}
+table{width:100%;border-collapse:collapse;text-align:left;font-size:0.82rem}
+th,td{padding:0.65rem 0.8rem;border-bottom:1px solid var(--bdr-s)}
+th{background:var(--elev);font-size:0.72rem;text-transform:uppercase;color:var(--cyan);font-family:ui-monospace,monospace}
+
+.modal-bg{position:fixed;inset:0;background:rgba(3,7,15,0.82);backdrop-filter:blur(4px);z-index:60;display:none;align-items:center;justify-content:center;padding:0.85rem}
 .modal-bg.open{display:flex}
-.modal-box{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;max-width:560px;width:100%;padding:1.4rem;display:flex;flex-direction:column;gap:0.9rem;box-shadow:var(--shd)}
-#toast-c{position:fixed;bottom:1.25rem;right:1.25rem;z-index:70;display:flex;flex-direction:column;gap:0.45rem;pointer-events:none}
-.toast{background:var(--elev);border:1px solid var(--cyan);color:var(--txt);padding:0.65rem 1rem;border-radius:8px;font-size:0.8rem;font-weight:600;box-shadow:var(--shd)}
+.modal-box{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;max-width:540px;width:100%;max-height:92vh;overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:0.9rem;box-shadow:var(--shd)}
+#toast-c{position:fixed;bottom:1rem;right:1rem;left:1rem;z-index:70;display:flex;flex-direction:column;align-items:flex-end;gap:0.45rem;pointer-events:none}
+.toast{background:var(--elev);border:1px solid var(--cyan);color:var(--txt);padding:0.65rem 1rem;border-radius:8px;font-size:0.82rem;font-weight:600;box-shadow:var(--shd);max-width:100%}
 #print-header{display:none;border-bottom:2px solid #0f172a;padding-bottom:0.8rem;margin-bottom:1rem}
-footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-size:0.74rem;color:var(--sub);margin-top:auto;font-family:ui-monospace,monospace}
-@media print{@page{size:A4 portrait;margin:10mm}header,footer,.no-print,aside,#norm-drawer{display:none!important}#print-header{display:block!important}#ws-recommend,#ws-dag,#ws-strategy,#ws-audit{display:none!important}#ws-planner{display:block!important}body{background:#fff!important;color:#0f172a!important;font-size:11.5px!important}.p-layout{grid-template-columns:1fr!important}.y-block,.sem-col,.s-card{border-color:#94a3b8!important;background:#fff!important;color:#0f172a!important;box-shadow:none!important;break-inside:avoid}.s-title,.s-code,strong{color:#0f172a!important}.bdg{border:1px solid #64748b!important;color:#0f172a!important;background:#f1f5f9!important}}
+footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:0.74rem;color:var(--sub);margin-top:auto;font-family:ui-monospace,monospace}
+
+/* ADAPTACIÓN ESPECÍFICA PARA TABLETS Y MÓVILES (FIREFOX ANDROID / SAFARI IOS) */
+@media (max-width:1024px){
+  .p-layout{grid-template-columns:minmax(0,1fr)}
+  .grid-4,.grid-5{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:768px){
+  header{position:relative} /* Evita que la cabecera flotante tape o se descuadre en Safari iOS / Android */
+  .h-top{padding:0.6rem 0.85rem}
+  .brand-sub{display:none}
+  .kpi-bar{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi-bar .pill:first-child{grid-column:span 2}
+  .y-grid,.grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:minmax(0,1fr)}
+  .y-grid{padding:0.75rem;gap:0.85rem}
+  .sem-col{padding:0.75rem}
+  .s-card{padding:0.8rem}
+  .s-title{font-size:0.95rem}
+  .y-tab{min-width:44%}
+}
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  header,footer,.no-print,aside,#norm-drawer,.year-switcher{display:none!important}
+  #print-header{display:block!important}
+  #ws-recommend,#ws-dag,#ws-strategy,#ws-audit{display:none!important}
+  #ws-planner,.y-block{display:block!important}
+  body{background:#fff!important;color:#0f172a!important;font-size:11.5px!important}
+  .p-layout{grid-template-columns:1fr!important}
+  .y-grid{grid-template-columns:repeat(2,1fr)!important}
+  .y-block,.sem-col,.s-card{border-color:#94a3b8!important;background:#fff!important;color:#0f172a!important;box-shadow:none!important;break-inside:avoid}
+  .s-title,.s-code,strong{color:#0f172a!important}
+  .bdg{border:1px solid #64748b!important;color:#0f172a!important;background:#f1f5f9!important}
+}
 </style>
 </head>
 <body>
 <div id="toast-c" aria-live="polite"></div>
+
+<!-- CABECERA COMPACTA SIN ELEMENTOS DESBORDANTES -->
 <header class="no-print">
   <div class="h-top">
     <div class="brand">
       <div class="logo">CG</div>
-      <div>
-        <div style="display:flex;align-items:center;gap:0.5rem;">
-          <h1 style="font-size:1.05rem;font-weight:800;letter-spacing:-0.3px;">CGIS · Laboratorio y Análisis de Itinerarios</h1>
-          <span class="bdg b-pri" id="plan-badge">Plan URJC-2176 / 2239</span>
+      <div style="min-width:0;">
+        <div style="display:flex;align-items:center;gap:0.45rem;">
+          <h1 class="brand-title">CGIS · Planificador de Itinerarios</h1>
+          <span class="bdg b-pri" id="plan-badge">URJC-2176</span>
         </div>
-        <p style="font-size:0.73rem;color:var(--mut);">Grado en Ciencia, Gestión e Ingeniería de Servicios (240 ECTS)</p>
+        <p class="brand-sub" style="font-size:0.73rem;color:var(--mut);">Grado en Ciencia, Gestión e Ingeniería de Servicios (240 ECTS)</p>
       </div>
     </div>
-    <div class="kpi-bar">
-      <div class="pill" style="border-color:var(--cyan);background:var(--pri-s);"><span>🆔 Expediente:</span><span id="kpi-exp-num" class="k-val" style="color:var(--cyan);">Anónimo</span></div>
-      <div class="pill"><span style="color:var(--mut);">Consolidados:</span><span id="kpi-passed" class="k-val" style="color:var(--cyan);">0 ECTS</span></div>
-      <div class="pill" title="Forman la ruta de partida actual pero no desbloquean prelaciones ni Prácticas hasta superarse"><span style="color:var(--mut);">En Curso (Condicionados):</span><span id="kpi-inprogress" class="k-val" style="color:var(--warn);">0 ECTS</span></div>
-      <div class="pill"><span style="color:var(--mut);">Por Matricular:</span><span id="kpi-enrolled" class="k-val" style="color:var(--inf);">240 ECTS</span></div>
-      <div class="pill"><span style="color:var(--mut);">Horizonte:</span><span id="kpi-duration" class="k-val">4 Años (8 Sem)</span></div>
-    </div>
-    <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">
-      <button class="btn btn-sm btn-blue" onclick="openTranscriptModal()">📄 Cargar Expediente URJC</button>
-      <button class="btn btn-sm" onclick="toggleTheme()" title="Alternar estética Dinosaurio / Modo Claro">☀️/🌙</button>
+    <div class="h-actions">
+      <button class="btn btn-sm btn-blue" onclick="openTranscriptModal()">📄 Cargar Expediente</button>
+      <button class="btn btn-sm" onclick="toggleTheme()" title="Cambiar modo oscuro / claro">☀️/🌙</button>
       <button class="btn btn-sm" onclick="exportJSON()">⬇ JSON</button>
       <button class="btn btn-sm" onclick="document.getElementById('imp-json').click()">⬆ JSON</button>
       <input type="file" id="imp-json" style="display:none;" accept=".json" onchange="importJSON(event)">
-      <button class="btn btn-sm btn-pri" onclick="saveAsPDF()">💾 Guardar como PDF</button>
+      <button class="btn btn-sm btn-pri" onclick="saveAsPDF()">💾 PDF</button>
     </div>
   </div>
   <div class="nav-bar">
     <nav class="tabs" aria-label="Navegación del simulador">
-      <button class="tab-btn active" onclick="setWS('planner')" id="tab-planner">📅 1. Mi Mapa de Matrícula</button>
-      <button class="tab-btn" onclick="setWS('dag')" id="tab-dag">🕸️ 2. Red PERT y Camino Crítico</button>
-      <button class="tab-btn" onclick="setWS('strategy')" id="tab-strategy">🧭 3. Copiloto DAFO, CAME y Perfiles</button>
-      <button class="tab-btn" onclick="setWS('audit')" id="tab-audit">🔬 4. Tabla Accesible, Oráculo y Tests</button>
+      <button class="tab-btn active" onclick="setWS('planner')" id="tab-planner">📅 1. Mapa de Matrícula</button>
+      <button class="tab-btn" onclick="setWS('dag')" id="tab-dag">🕸️ 2. Red PERT</button>
+      <button class="tab-btn" onclick="setWS('strategy')" id="tab-strategy">🧭 3. DAFO y Perfiles</button>
+      <button class="tab-btn" onclick="setWS('audit')" id="tab-audit">🔬 4. Catálogo y Tests</button>
       <button class="tab-btn" onclick="setWS('recommend')" id="tab-recommend">🚀 5. Itinerarios Recomendados</button>
-      <button class="alert-tab-btn st-ok" id="alert-toggle-btn" onclick="toggleNormDrawer()" title="Pulsar para desplegar u ocultar avisos normativos y pedagógicos">
-        <span id="alert-btn-icon">🔹</span><span id="alert-btn-label">0 Alertas</span><span style="font-size:0.65rem;">▾</span>
-      </button>
     </nav>
+    <button class="alert-tab-btn st-ok" id="alert-toggle-btn" onclick="toggleNormDrawer()" title="Desplegar u ocultar avisos normativos">
+      <span id="alert-btn-icon">🔹</span><span id="alert-btn-label">0 Alertas</span><span style="font-size:0.65rem;">▾</span>
+    </button>
   </div>
 </header>
+
+<!-- BANDA DE RESUMEN KPI ADAPTABLE (2 COLUMNAS EN MÓVIL, 5 EN ESCRITORIO) -->
+<div class="kpi-strip-wrap no-print">
+  <div class="kpi-bar">
+    <div class="pill" style="border-color:var(--cyan);background:var(--pri-s);">
+      <span class="pill-lbl">🆔 Expediente Activo</span>
+      <span id="kpi-exp-num" class="k-val" style="color:var(--cyan);">Anónimo (Sin cargar)</span>
+    </div>
+    <div class="pill">
+      <span class="pill-lbl">Consolidados</span>
+      <span id="kpi-passed" class="k-val" style="color:var(--cyan);">0 ECTS</span>
+    </div>
+    <div class="pill" title="En ruta de partida actual: no desbloquean siguientes hasta aprobarse">
+      <span class="pill-lbl">En Curso (Ruta Actual)</span>
+      <span id="kpi-inprogress" class="k-val" style="color:var(--warn);">0 ECTS</span>
+    </div>
+    <div class="pill">
+      <span class="pill-lbl">Por Matricular</span>
+      <span id="kpi-enrolled" class="k-val" style="color:var(--inf);">240 ECTS</span>
+    </div>
+    <div class="pill">
+      <span class="pill-lbl">Horizonte Estimado</span>
+      <span id="kpi-duration" class="k-val">4 Años (8 Sem)</span>
+    </div>
+  </div>
+</div>
 
 <div id="norm-drawer" class="no-print"><div id="norm-banner" class="drawer-box"></div></div>
 
@@ -144,7 +235,7 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
         <div><strong>FECHA:</strong> <span id="print-date"></span></div>
       </div>
     </div>
-    <div style="margin-top:0.6rem;padding:0.5rem;background:#f1f5f9;border:1px solid #cbd5e1;font-family:monospace;font-size:0.82rem;display:flex;justify-content:space-between;">
+    <div style="margin-top:0.6rem;padding:0.5rem;background:#f1f5f9;border:1px solid #cbd5e1;font-family:monospace;font-size:0.82rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
       <span><strong>PLAN:</strong> <span id="print-plan">URJC-2176</span></span>
       <span><strong>NOTA MEDIA:</strong> <span id="print-gpa">N/A</span></span>
       <span><strong>CONSOLIDADOS:</strong> <span id="print-passed">0 ECTS</span></span>
@@ -153,18 +244,21 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
     </div>
   </div>
 
-  <!-- ESPACIO 1: MI MAPA DE MATRÍCULA (CON PANEL IZQUIERDO COMPLETO) -->
+  <!-- ESPACIO 1: MI MAPA DE MATRÍCULA (PANEL IZQUIERDO LIMPIO + NAVEGADOR POR AÑO) -->
   <section id="ws-planner" class="p-layout">
-    <aside class="no-print" style="display:flex;flex-direction:column;gap:0.9rem;">
+    <aside class="no-print" style="display:flex;flex-direction:column;gap:0.85rem;">
+      <!-- TARJETA PRINCIPAL DE CARGA DE EXPEDIENTE -->
       <div class="card" style="border-color:var(--cyan);">
-        <div class="c-head"><h2 class="c-title">📄 Tu Expediente URJC</h2><span class="bdg b-pri">Lectura Directa</span></div>
-        <p class="c-sub">Sube directamente el PDF de tu Ficha Informativa URJC o carga el expediente sintético:</p>
+        <div class="c-head"><h2 class="c-title">📄 Tu Expediente URJC</h2><span class="bdg b-pri">Automático</span></div>
+        <p class="c-sub">Sube tu Ficha Informativa URJC en PDF o prueba el expediente sintético para calcular tus rutas:</p>
         <div style="display:flex;flex-direction:column;gap:0.45rem;">
           <button class="btn btn-blue" onclick="document.getElementById('pdf-file-in').click()">📁 Subir PDF / TXT de Expediente</button>
           <button class="btn" onclick="loadSyntheticDemo9999()">⚡ Cargar Demo Sintético (Nº 9999)</button>
         </div>
         <div id="exp-summary-box" style="font-size:0.76rem;color:var(--txt);display:none;border-top:1px solid var(--bdr);padding-top:0.55rem;font-family:ui-monospace,monospace;"></div>
       </div>
+
+      <!-- RITMO RÁPIDO -->
       <div class="card">
         <h2 class="c-title">⚡ 1. Ajustar Ritmo (Pendientes)</h2>
         <div style="display:flex;flex-direction:column;gap:0.4rem;">
@@ -173,60 +267,77 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
           <button class="btn" style="justify-content:flex-start;" onclick="applySmartPreset('6y-parttime')">🌱 Tiempo Parcial (36 ECTS/año)</button>
         </div>
       </div>
-      <div class="card">
-        <h2 class="c-title">⚙️ 2. Situación y Reglas</h2>
-        <label style="font-size:0.74rem;color:var(--mut);">Partida rápida por cursos (sin PDF):</label>
-        <select id="start-preset-select" onchange="applyExpedientePreset(this.value)">
-          <option value="0">Nuevo Ingreso (0 ECTS aprobados)</option>
-          <option value="1">1º Curso Superado (60 ECTS)</option>
-          <option value="2">1º y 2º Superados (120 ECTS)</option>
-          <option value="3">1º, 2º y 3º Superados (180 ECTS)</option>
-        </select>
-        <label style="font-size:0.74rem;color:var(--mut);">Régimen URJC (Norma S02):</label>
-        <select id="regime-select" onchange="updateSettings()">
-          <option value="completo">Tiempo Completo (48–78 ECTS/año)</option>
-          <option value="parcial">Tiempo Parcial (24–47 ECTS/año)</option>
-        </select>
-        <label style="font-size:0.74rem;color:var(--mut);">Límite personal por semestre (ECTS):</label>
-        <input type="number" id="max-sem-input" value="39" min="12" max="60" step="3" onchange="updateSettings()">
-      </div>
-      <div class="card">
-        <div class="c-head"><h2 class="c-title">🎯 3. Optativas (4 de 5)</h2><span class="bdg b-pri" id="opt-badge">4 / 4 (12 ECTS)</span></div>
-        <div id="opt-list" style="display:flex;flex-direction:column;gap:0.4rem;font-size:0.78rem;"></div>
-      </div>
+
+      <!-- ACORDEÓN 2: REGLAS Y PARTIDA MANUAL (PLEGABLE PARA REDUCIR DENSIDAD) -->
+      <details class="clean-acc">
+        <summary>⚙️ 2. Régimen y Partida Manual</summary>
+        <div class="acc-body">
+          <label style="font-size:0.75rem;color:var(--mut);">Partida rápida por cursos (sin PDF):</label>
+          <select id="start-preset-select" onchange="applyExpedientePreset(this.value)">
+            <option value="0">Nuevo Ingreso (0 ECTS aprobados)</option>
+            <option value="1">1º Curso Superado (60 ECTS)</option>
+            <option value="2">1º y 2º Superados (120 ECTS)</option>
+            <option value="3">1º, 2º y 3º Superados (180 ECTS)</option>
+          </select>
+          <label style="font-size:0.75rem;color:var(--mut);">Régimen URJC (Norma S02):</label>
+          <select id="regime-select" onchange="updateSettings()">
+            <option value="completo">Tiempo Completo (48–78 ECTS/año)</option>
+            <option value="parcial">Tiempo Parcial (24–47 ECTS/año)</option>
+          </select>
+          <label style="font-size:0.75rem;color:var(--mut);">Límite personal por semestre (ECTS):</label>
+          <input type="number" id="max-sem-input" value="39" min="12" max="60" step="3" onchange="updateSettings()">
+        </div>
+      </details>
+
+      <!-- ACORDEÓN 3: OPTATIVAS (PLEGABLE) -->
+      <details class="clean-acc">
+        <summary><span>🎯 3. Tus Optativas</span> <span class="bdg b-pri" id="opt-badge" style="margin-right:0.4rem;">4 / 4</span></summary>
+        <div class="acc-body">
+          <div id="opt-list" style="display:flex;flex-direction:column;gap:0.45rem;font-size:0.8rem;"></div>
+        </div>
+      </details>
     </aside>
 
-    <div style="display:flex;flex-direction:column;gap:0.95rem;">
-      <div class="card no-print" style="padding:0.75rem 1rem;">
+    <!-- ZONA CENTRAL DEL TABLERO CON ENFOQUE POR AÑO ACADÉMICO -->
+    <div style="display:flex;flex-direction:column;gap:0.9rem;min-width:0;">
+      
+      <!-- SELECTOR DE AÑO ACADÉMICO (EVITA MOSTRAR 50 ASIGNATURAS JUNTAS) -->
+      <div class="year-switcher no-print" id="year-tabs-bar" role="tablist" aria-label="Seleccionar Año Académico"></div>
+
+      <!-- FILTROS RÁPIDOS COMPACTOS -->
+      <div class="card no-print" style="padding:0.7rem 0.95rem;">
         <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:0.6rem;">
-          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.55rem;">
-            <input type="text" id="search-in" placeholder="🔍 Buscar asignatura o código..." oninput="renderBoard()">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.5rem;flex:1;">
+            <input type="text" id="search-in" placeholder="🔍 Buscar asignatura..." oninput="renderBoard()" style="flex:1;min-width:150px;">
             <select id="filter-type" onchange="renderBoard()">
-              <option value="ALL">Todas las asignaturas (FB, OB, OP)</option>
-              <option value="PENDING">📌 Solo Pendientes de Matricular</option>
-              <option value="INCOURSE">⏳ Solo Ruta de Partida (En Curso)</option>
-              <option value="PASSED">🔹 Solo Superadas / Reconocidas</option>
-              <option value="FB">Solo Formación Básica (FB)</option>
-              <option value="OB">Solo Obligatorias (OB)</option>
-              <option value="OP">Solo Optativas (OP)</option>
+              <option value="ALL">Todas (FB, OB, OP)</option>
+              <option value="PENDING">📌 Solo Pendientes</option>
+              <option value="INCOURSE">⏳ Solo En Curso</option>
+              <option value="PASSED">🔹 Solo Superadas</option>
             </select>
             <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.78rem;cursor:pointer;">
-              <input type="checkbox" id="crit-chk" onchange="renderBoard()"><span style="color:var(--err);font-weight:700;">🔥 Camino Crítico</span>
+              <input type="checkbox" id="crit-chk" onchange="renderBoard()"><span style="color:var(--err);font-weight:700;">🔥 Críticas</span>
             </label>
             <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.78rem;cursor:pointer;">
               <input type="checkbox" id="hide-pass-chk" onchange="renderBoard()"><span>Ocultar superadas</span>
             </label>
           </div>
           <div style="display:flex;gap:0.35rem;">
-            <button class="btn btn-sm" onclick="changeYears(1)">+ Añadir Año</button>
-            <button class="btn btn-sm" onclick="changeYears(-1)">- Quitar Año</button>
+            <button class="btn btn-sm" onclick="changeYears(1)">+ Año</button>
+            <button class="btn btn-sm" onclick="changeYears(-1)">- Año</button>
           </div>
         </div>
       </div>
-      <div class="card no-print" style="border:1px dashed var(--cyan);background:rgba(14,165,233,0.05);padding:0.9rem;">
-        <div style="font-size:0.8rem;font-weight:700;color:var(--cyan);">📌 Actividades Especiales sin Semestre Fijo en Guía (Idioma, Prácticas 24 ECTS, RAC, TFG)</div>
-        <div id="special-grid" class="grid-4"></div>
-      </div>
+
+      <!-- ACTIVIDADES ESPECIALES RECOGIDAS EN ACORDEÓN PARA NO DUPLICAR EN PANTALLA -->
+      <details class="clean-acc no-print">
+        <summary><span style="color:var(--cyan);font-size:0.84rem;">📌 Actividades Especiales sin Semestre Fijo en Guía (Idioma, Prácticas, RAC, TFG)</span></summary>
+        <div class="acc-body">
+          <div id="special-grid" class="grid-4"></div>
+        </div>
+      </details>
+
+      <!-- TABLERO DE AÑOS ACADÉMICOS -->
       <div id="years-board"></div>
     </div>
   </section>
@@ -236,45 +347,45 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
     <div class="c-head">
       <div>
         <h2 class="c-title">🕸️ Red Topológica PERT y Camino Crítico (CPM)</h2>
-        <p class="c-sub">Las materias <strong>En Curso (Ámbar)</strong> forman la ruta de partida actual pero no desbloquean prelaciones como consolidadas hasta superarse.</p>
+        <p class="c-sub">Desliza horizontalmente en móvil para explorar la red. Toca cualquier nodo para abrir su ficha completa.</p>
       </div>
-      <div style="display:flex;gap:0.5rem;font-size:0.74rem;">
+      <div style="display:flex;gap:0.4rem;flex-wrap:wrap;font-size:0.74rem;">
         <span class="bdg b-err">● Crítica Pendiente</span>
         <span class="bdg b-warn">● En Curso (Condicionante)</span>
         <span class="bdg b-ok">● Consolidada (Superada)</span>
       </div>
     </div>
-    <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:10px;overflow-x:auto;padding:0.6rem;">
-      <svg id="dag-svg" style="width:100%;min-width:1100px;height:460px;"></svg>
+    <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0.5rem;max-width:100%;">
+      <svg id="dag-svg" style="width:1050px;height:450px;display:block;"></svg>
     </div>
     <div class="grid-5">
-      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">CADENA CRÍTICA MÍNIMA</span><strong id="pert-kpi-len" style="font-size:1.15rem;color:var(--err);font-family:monospace;">7 semestres</strong><span style="font-size:0.7rem;color:var(--sub);">Secuencia pedagógica</span></div>
-      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">MATERIAS CRÍTICAS</span><strong id="pert-kpi-crit" style="font-size:1.15rem;font-family:monospace;">9 asignaturas</strong><span style="font-size:0.7rem;color:var(--sub);">Holgura = 0</span></div>
-      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">MATERIAS COMODÍN (BUFFER)</span><strong id="pert-kpi-buf" style="font-size:1.15rem;color:var(--inf);font-family:monospace;">29 asignaturas</strong><span style="font-size:0.7rem;color:var(--sub);">Holgura &ge; 2 semestres</span></div>
-      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">CONDICIONADAS POR EN CURSO</span><strong id="pert-kpi-incourse-lock" style="font-size:1.15rem;color:var(--warn);font-family:monospace;">0 materias</strong><span style="font-size:0.7rem;color:var(--sub);">Esperan aprobar ruta actual</span></div>
-      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">PRÁCTICAS EXTERNAS (S04)</span><strong style="font-size:1.15rem;color:var(--cyan);font-family:monospace;">108 ECTS (45%)</strong><span style="font-size:0.7rem;color:var(--sub);">Exige créditos consolidados</span></div>
+      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">CADENA CRÍTICA</span><strong id="pert-kpi-len" style="font-size:1.1rem;color:var(--err);font-family:monospace;">7 semestres</strong></div>
+      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">MATERIAS CRÍTICAS</span><strong id="pert-kpi-crit" style="font-size:1.1rem;font-family:monospace;">9 asignaturas</strong></div>
+      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">MATERIAS COMODÍN</span><strong id="pert-kpi-buf" style="font-size:1.1rem;color:var(--inf);font-family:monospace;">29 asignaturas</strong></div>
+      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">CONDICIONADAS</span><strong id="pert-kpi-incourse-lock" style="font-size:1.1rem;color:var(--warn);font-family:monospace;">0 materias</strong></div>
+      <div class="card" style="padding:0.8rem;"><span style="font-size:0.7rem;color:var(--mut);">UMBRAL PRÁCTICAS</span><strong style="font-size:1.1rem;color:var(--cyan);font-family:monospace;">108 ECTS (45%)</strong></div>
     </div>
   </section>
 
   <!-- ESPACIO 3: COPILOTO ESTRATÉGICO DAFO, CAME, PARETO Y 5 PERFILES -->
-  <section id="ws-strategy" style="display:none;flex-direction:column;gap:1.15rem;">
+  <section id="ws-strategy" style="display:none;flex-direction:column;gap:1.1rem;">
     <div class="card">
       <h2 class="c-title">🧭 Diagnóstico Estratégico Dinámico (DAFO) y Acciones (CAME)</h2>
       <div class="grid-2">
-        <div style="border:1px solid var(--err);background:var(--err-s);border-radius:10px;padding:0.9rem;"><strong style="color:var(--err);">⚠️ DEBILIDADES Y ACCIÓN CORREGIR (C)</strong><div id="dafo-dc" style="margin-top:0.4rem;font-size:0.8rem;display:flex;flex-direction:column;gap:0.35rem;"></div></div>
-        <div style="border:1px solid var(--warn);background:var(--warn-s);border-radius:10px;padding:0.9rem;"><strong style="color:var(--warn);">🛡️ AMENAZAS Y ACCIÓN AFRONTAR (A)</strong><div id="dafo-aa" style="margin-top:0.4rem;font-size:0.8rem;display:flex;flex-direction:column;gap:0.35rem;"></div></div>
-        <div style="border:1px solid var(--cyan);background:var(--pri-s);border-radius:10px;padding:0.9rem;"><strong style="color:var(--cyan);">💪 FORTALEZAS Y ACCIÓN MANTENER (M)</strong><div id="dafo-fm" style="margin-top:0.4rem;font-size:0.8rem;display:flex;flex-direction:column;gap:0.35rem;"></div></div>
-        <div style="border:1px solid var(--inf);background:var(--inf-s);border-radius:10px;padding:0.9rem;"><strong style="color:var(--inf);">🚀 OPORTUNIDADES Y ACCIÓN EXPLOTAR (E)</strong><div id="dafo-oe" style="margin-top:0.4rem;font-size:0.8rem;display:flex;flex-direction:column;gap:0.35rem;"></div></div>
+        <div style="border:1px solid var(--err);background:var(--err-s);border-radius:10px;padding:0.95rem;"><strong style="color:var(--err);">⚠️ DEBILIDADES Y ACCIÓN CORREGIR (C)</strong><div id="dafo-dc" style="margin-top:0.45rem;font-size:0.84rem;display:flex;flex-direction:column;gap:0.35rem;"></div></div>
+        <div style="border:1px solid var(--warn);background:var(--warn-s);border-radius:10px;padding:0.95rem;"><strong style="color:var(--warn);">🛡️ AMENAZAS Y ACCIÓN AFRONTAR (A)</strong><div id="dafo-aa" style="margin-top:0.45rem;font-size:0.84rem;display:flex;flex-direction:column;gap:0.35rem;"></div></div>
+        <div style="border:1px solid var(--cyan);background:var(--pri-s);border-radius:10px;padding:0.95rem;"><strong style="color:var(--cyan);">💪 FORTALEZAS Y ACCIÓN MANTENER (M)</strong><div id="dafo-fm" style="margin-top:0.45rem;font-size:0.84rem;display:flex;flex-direction:column;gap:0.35rem;"></div></div>
+        <div style="border:1px solid var(--inf);background:var(--inf-s);border-radius:10px;padding:0.95rem;"><strong style="color:var(--inf);">🚀 OPORTUNIDADES Y ACCIÓN EXPLOTAR (E)</strong><div id="dafo-oe" style="margin-top:0.45rem;font-size:0.84rem;display:flex;flex-direction:column;gap:0.35rem;"></div></div>
       </div>
     </div>
     <div class="grid-2">
       <div class="card">
         <h3 class="c-title">📈 Frontera de Pareto (Duración vs. Pico ECTS)</h3>
-        <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:10px;height:240px;padding:0.5rem;"><svg id="pareto-svg" style="width:100%;height:100%;"></svg></div>
+        <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:10px;height:240px;padding:0.5rem;"><svg id="pareto-svg" viewBox="0 0 420 220" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;"></svg></div>
       </div>
       <div class="card">
         <h3 class="c-title">🎯 Cobertura de los 5 Perfiles Profesionales CGIS</h3>
-        <div id="radar-bars" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
+        <div id="radar-bars" style="display:flex;flex-direction:column;gap:0.65rem;"></div>
       </div>
     </div>
   </section>
@@ -284,11 +395,11 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
     <div class="grid-2">
       <div class="card">
         <div class="c-head"><h3 class="c-title">🧮 Oráculo Exacto (Fixture S01: OR01–OR03)</h3><button class="btn btn-sm btn-pri" onclick="runOracleLive()">Ejecutar Oráculo</button></div>
-        <pre id="oracle-out" style="background:var(--bg);padding:0.7rem;border-radius:8px;border:1px solid var(--bdr);font-size:0.75rem;font-family:monospace;white-space:pre-wrap;"></pre>
+        <pre id="oracle-out" style="background:var(--bg);padding:0.75rem;border-radius:8px;border:1px solid var(--bdr);font-size:0.76rem;font-family:monospace;white-space:pre-wrap;"></pre>
       </div>
       <div class="card">
         <div class="c-head"><h3 class="c-title">✅ Suite de Aceptación y Regresión (14 Tests)</h3><button class="btn btn-sm btn-pri" onclick="runTestsLive()">Re-ejecutar</button></div>
-        <div class="tbl-w" style="max-height:220px;overflow-y:auto;">
+        <div class="tbl-w" style="max-height:240px;overflow-y:auto;">
           <table><thead><tr><th>ID</th><th>Área</th><th>Criterio</th><th>Estado</th></tr></thead><tbody id="tests-tbody"></tbody></table>
         </div>
       </div>
@@ -297,14 +408,14 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
       <h3 class="c-title">📋 Catálogo Conciliado de 50 Asignaturas (Plan 2176 Presencial / 2239 Semipresencial)</h3>
       <div class="tbl-w">
         <table>
-          <thead><tr><th>Código</th><th>Asignatura (Clic para inspeccionar)</th><th>Tipo</th><th>ECTS</th><th>Curso/Sem</th><th>Modalidad/Campus</th><th>Estado en Expediente</th><th>Guía 26-27</th></tr></thead>
+          <thead><tr><th>Código</th><th>Asignatura (Toca para inspeccionar)</th><th>Tipo</th><th>ECTS</th><th>Curso/Sem</th><th>Modalidad/Campus</th><th>Estado en Expediente</th></tr></thead>
           <tbody id="full-cat-tbody"></tbody>
         </table>
       </div>
     </div>
   </section>
 
-  <!-- ESPACIO 5 (A LA DERECHA): ITINERARIOS RECOMENDADOS Y DESCARTE DE OPTATIVA -->
+  <!-- ESPACIO 5: ITINERARIOS RECOMENDADOS Y DESCARTE DE OPTATIVA -->
   <section id="ws-recommend" style="display:none;flex-direction:column;gap:1.15rem;">
     <div class="card" style="border-color:var(--cyan);background:linear-gradient(90deg,var(--elev) 0%,var(--surf) 100%);">
       <div class="c-head">
@@ -314,29 +425,29 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
         </div>
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <button class="btn btn-blue" onclick="document.getElementById('pdf-file-in').click()">📁 Subir Otro Expediente PDF</button>
-          <button class="btn" onclick="setWS('planner')">📅 Volver al Mapa de Matrícula</button>
+          <button class="btn" onclick="setWS('planner')">📅 Ir al Mapa de Matrícula</button>
         </div>
       </div>
       <div class="grid-4">
-        <div style="background:var(--bg);padding:0.8rem;border-radius:8px;border:1px solid var(--bdr);">
+        <div style="background:var(--bg);padding:0.85rem;border-radius:8px;border:1px solid var(--bdr);">
           <div style="font-size:0.7rem;color:var(--mut);">CRÉDITOS CONSOLIDADOS</div>
           <strong id="rec-k-passed" style="font-size:1.2rem;color:var(--cyan);font-family:monospace;">0 ECTS</strong>
-          <div style="font-size:0.72rem;color:var(--sub);">Superados/reconocidos (desbloquean hoy)</div>
+          <div style="font-size:0.72rem;color:var(--sub);">Superados (desbloquean hoy)</div>
         </div>
-        <div style="background:var(--bg);padding:0.8rem;border-radius:8px;border:1px solid var(--bdr);">
+        <div style="background:var(--bg);padding:0.85rem;border-radius:8px;border:1px solid var(--bdr);">
           <div style="font-size:0.7rem;color:var(--mut);">RUTA DE PARTIDA (EN CURSO)</div>
           <strong id="rec-k-incourse" style="font-size:1.2rem;color:var(--warn);font-family:monospace;">0 ECTS</strong>
-          <div style="font-size:0.72rem;color:var(--sub);">En camino actual (no desbloquean aún)</div>
+          <div style="font-size:0.72rem;color:var(--sub);">En camino (no desbloquean aún)</div>
         </div>
-        <div style="background:var(--bg);padding:0.8rem;border-radius:8px;border:1px solid var(--bdr);">
+        <div style="background:var(--bg);padding:0.85rem;border-radius:8px;border:1px solid var(--bdr);">
           <div style="font-size:0.7rem;color:var(--mut);">PENDIENTES POR MATRICULAR</div>
           <strong id="rec-k-pending" style="font-size:1.2rem;color:var(--txt);font-family:monospace;">240 ECTS</strong>
-          <div style="font-size:0.72rem;color:var(--sub);">A planificar tras la ruta en curso</div>
+          <div style="font-size:0.72rem;color:var(--sub);">A planificar en próximos cursos</div>
         </div>
-        <div style="background:var(--bg);padding:0.8rem;border-radius:8px;border:1px solid var(--bdr);">
+        <div style="background:var(--bg);padding:0.85rem;border-radius:8px;border:1px solid var(--bdr);">
           <div style="font-size:0.7rem;color:var(--mut);">OPTATIVA A DESECHAR (SUGERIDA)</div>
           <strong id="rec-k-discard" style="font-size:0.95rem;color:var(--err);font-family:monospace;">Analizando...</strong>
-          <div style="font-size:0.72rem;color:var(--sub);">Menor afinidad ponderada por notas</div>
+          <div style="font-size:0.72rem;color:var(--sub);">Menor nota media afín</div>
         </div>
       </div>
     </div>
@@ -368,15 +479,15 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
 <div id="transcript-modal" class="modal-bg" onclick="if(event.target===this) closeTranscriptModal()">
   <div class="modal-box" role="dialog" aria-modal="true">
     <div class="c-head"><h3 style="font-size:1rem;font-weight:800;">📄 Importador Inteligente de Expediente URJC</h3><button class="btn btn-sm" onclick="closeTranscriptModal()">✕</button></div>
-    <p style="font-size:0.78rem;color:var(--mut);">Selecciona tu archivo PDF de la <strong>Ficha Informativa del Alumno</strong>. Al cargarlo, el sistema analizará tus notas, te recomendará qué optativa descartar y abrirá la <strong>Pestaña 5 (Itinerarios Recomendados)</strong>.</p>
+    <p style="font-size:0.8rem;color:var(--mut);">Selecciona tu archivo PDF de la <strong>Ficha Informativa del Alumno</strong>. Al cargarlo, el sistema analizará tus notas, te recomendará qué optativa descartar y abrirá la <strong>Pestaña 5 (Itinerarios Recomendados)</strong>.</p>
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
       <button class="btn btn-blue" onclick="document.getElementById('pdf-file-in').click()">📁 Seleccionar Archivo PDF / TXT</button>
       <input type="file" id="pdf-file-in" style="display:none;" accept=".pdf,.txt" onchange="handleTranscriptFile(event)">
       <button class="btn btn-pri" onclick="loadSyntheticDemo9999(); closeTranscriptModal();">⚡ Cargar Demo Sintético (Nº 9999)</button>
     </div>
-    <label style="font-size:0.75rem;font-weight:600;color:var(--mut);">Texto extraído del documento (o pega aquí si lo prefieres):</label>
-    <textarea id="transcript-paste-area" rows="5" placeholder="Al seleccionar tu archivo PDF, el texto extraído aparecerá aquí y se procesará automáticamente..."></textarea>
-    <div id="transcript-parse-msg" style="font-size:0.78rem;"></div>
+    <label style="font-size:0.76rem;font-weight:600;color:var(--mut);">Texto extraído del documento (o pega aquí si lo prefieres):</label>
+    <textarea id="transcript-paste-area" rows="4" placeholder="Al seleccionar tu archivo PDF, el texto extraído aparecerá aquí y se procesará automáticamente..."></textarea>
+    <div id="transcript-parse-msg" style="font-size:0.8rem;"></div>
     <div style="display:flex;justify-content:flex-end;gap:0.5rem;">
       <button class="btn" onclick="closeTranscriptModal()">Cerrar</button>
       <button class="btn btn-pri" onclick="parsePastedTranscript()">Analizar y Ver Recomendaciones</button>
@@ -388,23 +499,23 @@ footer{border-top:1px solid var(--bdr);padding:0.9rem;text-align:center;font-siz
 <div id="subj-modal" class="modal-bg" onclick="if(event.target===this) closeSubjModal()">
   <div class="modal-box">
     <div class="c-head"><div><span id="m-code" class="bdg b-pri"></span><h3 id="m-name" style="font-size:1.05rem;font-weight:800;margin-top:0.3rem;"></h3></div><button class="btn btn-sm" onclick="closeSubjModal()">✕</button></div>
-    <div class="grid-4" style="grid-template-columns:repeat(3,1fr);">
-      <div style="background:var(--elev);padding:0.55rem;border-radius:8px;"><div style="font-size:0.66rem;color:var(--mut);">ECTS / TIPO</div><strong id="m-ects"></strong></div>
-      <div style="background:var(--elev);padding:0.55rem;border-radius:8px;"><div style="font-size:0.66rem;color:var(--mut);">CURSO GUÍA</div><strong id="m-sem"></strong></div>
-      <div style="background:var(--elev);padding:0.55rem;border-radius:8px;"><div style="font-size:0.66rem;color:var(--mut);">HOLGURA PERT</div><strong id="m-slack"></strong></div>
+    <div class="grid-3">
+      <div style="background:var(--elev);padding:0.6rem;border-radius:8px;"><div style="font-size:0.68rem;color:var(--mut);">ECTS / TIPO</div><strong id="m-ects"></strong></div>
+      <div style="background:var(--elev);padding:0.6rem;border-radius:8px;"><div style="font-size:0.68rem;color:var(--mut);">CURSO GUÍA</div><strong id="m-sem"></strong></div>
+      <div style="background:var(--elev);padding:0.6rem;border-radius:8px;"><div style="font-size:0.68rem;color:var(--mut);">HOLGURA PERT</div><strong id="m-slack"></strong></div>
     </div>
-    <div style="font-size:0.8rem;">
+    <div style="font-size:0.82rem;">
       <div><strong style="color:var(--mut);">Base recomendada previa:</strong> <span id="m-preds"></span></div>
       <div style="margin-top:0.35rem;"><strong style="color:var(--mut);">Desbloquea/apoya después:</strong> <span id="m-succs"></span></div>
     </div>
-    <div style="border-top:1px solid var(--bdr);padding-top:0.75rem;display:flex;justify-content:space-between;align-items:center;">
+    <div style="border-top:1px solid var(--bdr);padding-top:0.8rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
       <select id="m-move-sel" onchange="moveSubjectTo(state.modal_id, this.value)"></select>
       <button class="btn btn-blue" id="m-pass-btn" onclick="togglePass(state.modal_id); closeSubjModal();"></button>
     </div>
   </div>
 </div>
 
-<footer>CGIS-Itinerarios - Manuel Hernández</footer>
+<footer>CGIS-Itinerarios · Interfaz Adaptativa · Por Manuel Hernández</footer>
 
 <script>
 const RAW_CAT = [
@@ -466,6 +577,7 @@ const OPTATIVE_AFFINITY_MAP = {
 let state = {
   expediente_num: null, plan_code: "2176", plan_title: "GRADO EN CIENCIA, GESTIÓN E INGENIERÍA DE SERVICIOS",
   nota_media: null, regimen: "completo", max_ects_semestre: 39, total_years: 4,
+  active_year_view: 1, // Muestra 1 solo año a la vez para evitar saturación visual (0 = Ver todos)
   selected_electives: ["2176043", "2176042", "2176052", "2176045"],
   expediente: {}, notas: {}, notas_num: {}, passed_year: {}, passed_sem: {}, asignaciones: {}, modal_id: null
 };
@@ -654,6 +766,7 @@ function schedulePendingSubjectsRespectingOrder(mode, profile = state) {
   }
   CATALOG_SUBJECTS.filter(s => s.caracter === "OP" && !profile.selected_electives.includes(s.id)).forEach(s => delete profile.asignaciones[s.id]);
   profile.total_years = Math.min(6, Math.max(4, Math.ceil(Math.max(8, ...Object.values(profile.asignaciones)) / 2)));
+  state.active_year_view = Math.min(profile.total_years, Math.max(1, baseYear + 1));
 }
 
 function parseAndApplyTranscriptText(rawText) {
@@ -679,10 +792,10 @@ function parseAndApplyTranscriptText(rawText) {
   schedulePendingSubjectsRespectingOrder("4y-standard", state);
 
   refreshUI();
-  setWS("recommend"); // Lleva automáticamente a la Pestaña 5 (Itinerarios Recomendados)
+  setWS("recommend");
   const passedEcts = CATALOG_SUBJECTS.filter(s => isPassedStatus(state.expediente[s.id])).reduce((a,b)=>a+b.ects,0);
   const inCourseEcts = CATALOG_SUBJECTS.filter(s => state.expediente[s.id] === "en_curso").reduce((a,b)=>a+b.ects,0);
-  let summaryMsg = `✅ Expediente Nº ${res.expNum} analizado: ${passedEcts} ECTS consolidados, ${inCourseEcts} ECTS en ruta actual y recomendaciones generadas.`;
+  let summaryMsg = `✅ Expediente Nº ${res.expNum} analizado: ${passedEcts} ECTS consolidados, ${inCourseEcts} ECTS en ruta actual.`;
   const sumBox = document.getElementById("exp-summary-box");
   if (sumBox) {
     sumBox.style.display = "block";
@@ -884,7 +997,7 @@ function validatePlan(profile = state) {
     const tTo = isPassedStatus(profile.expediente[e.to]) ? 0 : subjectTerm[e.to];
     if (stFrom === "en_curso" && tTo > 0) {
       lockedByInCourse[e.to] = e.from;
-      conditions.push(`La asignatura ${e.to} no queda desbloqueada hasta superar ${e.from} (actualmente En Curso en Sem ${tFrom}).`);
+      conditions.push(`La asignatura ${e.to} no queda desbloqueada en firme hasta superar ${e.from} (actualmente En Curso en Sem ${tFrom}).`);
     }
     if (tFrom && tTo && tFrom >= tTo) {
       warnings.push({ rule: "PED-SEQ", msg: `Prelación (${e.label}): ${stFrom === 'en_curso' ? 'la materia llave está En Curso (no superada) y no desbloquea cursar la sucesora antes o a la vez' : 'cursas antes o a la vez la materia sucesora'}.` });
@@ -919,10 +1032,23 @@ function displayCode(s) { return state.plan_code + s.sfx; }
 function toggleNormDrawer() { document.getElementById("norm-drawer").classList.toggle("open"); }
 
 function saveAsPDF() {
+  const prevYearView = state.active_year_view;
+  state.active_year_view = 0; // Mostrar todos los años al exportar a PDF
+  refreshUI();
   const oldTitle = document.title;
   document.title = `Itinerario_CGIS_Expediente_${state.expediente_num || "Anonimo"}`;
   showToast("💾 En la ventana emergente elige 'Guardar como PDF'");
-  setTimeout(() => { window.print(); document.title = oldTitle; }, 150);
+  setTimeout(() => {
+    window.print();
+    document.title = oldTitle;
+    state.active_year_view = prevYearView;
+    refreshUI();
+  }, 150);
+}
+
+function setYearView(y) {
+  state.active_year_view = y;
+  renderBoard();
 }
 
 function renderRecommendationsView(val) {
@@ -947,11 +1073,11 @@ function renderRecommendationsView(val) {
         <span class="s-code">${displayCode(sub)}</span>
         <span class="bdg ${isWorst ? 'b-err' : 'b-pri'}">${isWorst ? '❌ DESECHAR' : '🔹 CURSAR'}</span>
       </div>
-      <div style="font-weight:700;font-size:0.85rem;min-height:2.4em;">${item.title}</div>
+      <div style="font-weight:700;font-size:0.86rem;min-height:2.4em;">${item.title}</div>
       <div style="font-family:monospace;font-size:0.78rem;color:${isWorst ? 'var(--err)' : 'var(--cyan)'};">
         Afinidad por notas: <strong>${item.score.toFixed(2)} / 10</strong>
       </div>
-      <div style="font-size:0.7rem;color:var(--mut);min-height:2.6em;">
+      <div style="font-size:0.72rem;color:var(--mut);min-height:2.4em;">
         ${item.breakdown.length ? 'Base: ' + item.breakdown.slice(0,2).join(', ') : 'Estimación base curricular'}
       </div>
       <button class="btn btn-sm ${isSelected ? 'btn-blue' : ''}" onclick="toggleOpt('${item.id}', true)">
@@ -964,12 +1090,12 @@ function renderRecommendationsView(val) {
   const baseYear = inCourseSems.length > 0 ? Math.ceil(Math.max(...inCourseSems) / 2) : Math.floor(val.ectsSuperados / 60);
   const routes = [
     {
-      mode: "4y-standard", badge: "ÓPTIMO A TIEMPO COMPLETO", title: "Ruta A · Finalización Directa (1 Año adicional)",
+      mode: "4y-standard", badge: "ÓPTIMO TIEMPO COMPLETO", title: "Ruta A · Finalización Directa (1 Año adicional)",
       desc: `Mantiene tus ${val.ectsEnCurso} ECTS en curso como ruta de partida en el Año ${baseYear || 3} y programa los ${pendingEcts} ECTS pendientes en el Año ${(baseYear || 3) + 1} (respetando estacionalidad 1Q/2Q y que las materias en curso aún no desbloquean).`,
       yearsTotal: (baseYear || 3) + 1, loadPerYear: `${pendingEcts} ECTS en el último curso`, regime: "Tiempo Completo (48–78 ECTS)"
     },
     {
-      mode: "5y-work", badge: "EQUILIBRADO / SOSTENIBLE", title: "Ruta B · Progresión moderada sin picos",
+      mode: "5y-work", badge: "EQUILIBRADO / SOSTENIBLE", title: "Ruta B · Progresión Moderada sin Picos",
       desc: `Completa primero tu ruta en curso actual (${val.ectsEnCurso} ECTS) para desbloquear prelaciones en firme y dosifica las materias pendientes a ~21–24 ECTS por semestre, dejando el TFG desahogado.`,
       yearsTotal: (baseYear || 3) + 2, loadPerYear: "~36–42 ECTS/año", regime: "Compatible con Trabajo"
     },
@@ -988,7 +1114,7 @@ function renderRecommendationsView(val) {
           <span style="font-family:monospace;font-size:0.75rem;color:var(--cyan);">Horizonte: ${r.yearsTotal} Años</span>
         </div>
         <h4 style="font-size:0.98rem;font-weight:800;color:var(--txt);">${r.title}</h4>
-        <p style="font-size:0.79rem;color:var(--mut);line-height:1.45;">${r.desc}</p>
+        <p style="font-size:0.8rem;color:var(--mut);line-height:1.45;">${r.desc}</p>
         <div style="background:var(--bg);padding:0.65rem;border-radius:6px;border:1px solid var(--bdr-s);font-family:monospace;font-size:0.75rem;display:flex;flex-direction:column;gap:0.25rem;">
           <div>• <strong>Carga proyectada:</strong> ${r.loadPerYear}</div>
           <div>• <strong>Marco normativo:</strong> ${r.regime}</div>
@@ -1011,9 +1137,9 @@ function selectRecommendedRoute(mode, printImmediately = false) {
 
 function refreshUI() {
   const val = validatePlan(state), cpm = computeCPM();
-  const expLabel = state.expediente_num ? `Nº ${state.expediente_num}${state.nota_media ? ' (Media: '+state.nota_media+')' : ''}` : "Anónimo";
+  const expLabel = state.expediente_num ? `Nº ${state.expediente_num}${state.nota_media ? ' (Media: '+state.nota_media+')' : ''}` : "Anónimo (Sin cargar)";
   document.getElementById("kpi-exp-num").textContent = expLabel;
-  document.getElementById("plan-badge").textContent = `Plan URJC-${state.plan_code}`;
+  document.getElementById("plan-badge").textContent = `URJC-${state.plan_code}`;
   document.getElementById("print-exp-num").textContent = state.expediente_num || "No especificado";
   document.getElementById("print-plan").textContent = `${state.plan_code} - ${state.plan_title}`;
   document.getElementById("print-gpa").textContent = state.nota_media || "N/A";
@@ -1041,10 +1167,10 @@ function renderBanner(val) {
   const b = document.getElementById("norm-banner");
   if (!val.isValid) {
     b.style.borderColor = "var(--err)";
-    b.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;"><strong style="color:var(--err);">❌ Conflictos Normativos Detectados (${val.violations.length}):</strong><div><button class="btn btn-sm btn-pri" onclick="applySmartPreset('4y-standard')">Auto-Nivelar</button> <button class="btn btn-sm" onclick="toggleNormDrawer()">Cerrar ✕</button></div></div><ul style="padding-left:1.2rem;font-size:0.8rem;">${val.violations.map(v=>`<li>${v.msg}</li>`).join('')}</ul>`;
+    b.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.4rem;"><strong style="color:var(--err);">❌ Conflictos Normativos Detectados (${val.violations.length}):</strong><div><button class="btn btn-sm btn-pri" onclick="applySmartPreset('4y-standard')">Auto-Nivelar</button> <button class="btn btn-sm" onclick="toggleNormDrawer()">Cerrar ✕</button></div></div><ul style="padding-left:1.2rem;font-size:0.82rem;">${val.violations.map(v=>`<li>${v.msg}</li>`).join('')}</ul>`;
   } else if (val.warnings.length) {
     b.style.borderColor = "var(--warn)";
-    b.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;"><strong style="color:var(--warn);">⚠️ Plan Legalmente Válido con Avisos de Secuencia (${val.warnings.length}):</strong><button class="btn btn-sm" onclick="toggleNormDrawer()">Ocultar ✕</button></div><ul style="padding-left:1.2rem;font-size:0.8rem;">${val.warnings.map(w=>`<li>${w.msg}</li>`).join('')}</ul>`;
+    b.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;"><strong style="color:var(--warn);">⚠️ Plan Legalmente Válido con Avisos de Secuencia (${val.warnings.length}):</strong><button class="btn btn-sm" onclick="toggleNormDrawer()">Ocultar ✕</button></div><ul style="padding-left:1.2rem;font-size:0.82rem;">${val.warnings.map(w=>`<li>${w.msg}</li>`).join('')}</ul>`;
   } else {
     b.style.borderColor = "var(--cyan)";
     b.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;"><span><strong style="color:var(--cyan);">🔹 Itinerario Conforme a Normativa URJC:</strong> Cumple límites anuales, umbral de Prácticas (108 ECTS) y requisitos de TFG.</span><button class="btn btn-sm" onclick="toggleNormDrawer()">Ocultar ✕</button></div>`;
@@ -1055,10 +1181,10 @@ function renderOptatives() {
   const c = document.getElementById("opt-list");
   c.innerHTML = CATALOG_SUBJECTS.filter(s => s.caracter === "OP").map(op => {
     const chk = state.selected_electives.includes(op.id);
-    return `<label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;"><input type="checkbox" ${chk ? 'checked' : ''} onchange="toggleOpt('${op.id}', false)"><span><strong style="color:var(--cyan);font-family:monospace;">${displayCode(op)}</strong> · ${op.nombre}</span></label>`;
+    return `<label style="display:flex;align-items:center;gap:0.45rem;cursor:pointer;"><input type="checkbox" ${chk ? 'checked' : ''} onchange="toggleOpt('${op.id}', false)"><span><strong style="color:var(--cyan);font-family:monospace;">${displayCode(op)}</strong> · ${op.nombre}</span></label>`;
   }).join('');
   const cnt = state.selected_electives.length, bdg = document.getElementById("opt-badge");
-  bdg.textContent = `${cnt} / 4 (${cnt * 3} ECTS)`; bdg.className = cnt === 4 ? "bdg b-pri" : "bdg b-err";
+  bdg.textContent = `${cnt} / 4`; bdg.className = cnt === 4 ? "bdg b-pri" : "bdg b-err";
 }
 
 function renderSpecials() {
@@ -1069,13 +1195,14 @@ function renderSpecials() {
       <div class="s-meta"><span class="s-code">${displayCode(s)} · ${s.caracter}</span><span class="bdg ${passed ? 'b-ok' : 'b-warn'}">${passed ? '✓ ACREDITADA' : s.ects + ' ECTS'}</span></div>
       <div class="s-title" onclick="openSubjModal('${s.id}')">${s.nombre}</div>
       <div class="s-ctrl">
-        ${passed ? `<span style="font-size:0.74rem;color:var(--cyan);font-weight:700;font-family:monospace;">${st === 'reconocida' ? '🏅 RECONOCIDA' : '🔹 SUPERADA'} ${nota ? '· '+nota : ''}</span>` : `<select style="font-size:0.74rem;padding:0.2rem 0.4rem;" onchange="moveSubjectTo('${s.id}', this.value)"><option value="" ${!cur?'selected':''}>Sin fijar (null)</option>${Array.from({length:maxSem},(_,i)=>i+1).map(t=>`<option value="${t}" ${cur==t?'selected':''}>Ubicar en Sem ${t}</option>`).join('')}</select>`}
+        ${passed ? `<span style="font-size:0.74rem;color:var(--cyan);font-weight:700;font-family:monospace;">${st === 'reconocida' ? '🏅 RECONOCIDA' : '🔹 SUPERADA'}</span>` : `<select style="font-size:0.76rem;padding:0.25rem 0.45rem;" onchange="moveSubjectTo('${s.id}', this.value)"><option value="" ${!cur?'selected':''}>Sin fijar</option>${Array.from({length:maxSem},(_,i)=>i+1).map(t=>`<option value="${t}" ${cur==t?'selected':''}>Sem ${t}</option>`).join('')}</select>`}
         <button class="btn btn-sm ${passed ? '' : 'btn-blue'}" onclick="togglePass('${s.id}')">${passed ? 'Revertir' : '✓ Aprobar'}</button>
       </div>
     </div>`;
   }).join('');
 }
 
+/* RENDERIZADO DEL TABLERO CON SELECTOR POR AÑO */
 function renderBoard(val = validatePlan(state), cpm = computeCPM()) {
   const board = document.getElementById("years-board"); board.innerHTML = "";
   const q = (document.getElementById("search-in")?.value || "").toLowerCase();
@@ -1083,11 +1210,47 @@ function renderBoard(val = validatePlan(state), cpm = computeCPM()) {
   const hiCrit = document.getElementById("crit-chk")?.checked || false;
   const hidePass = document.getElementById("hide-pass-chk")?.checked || false;
   const numYears = Math.max(state.total_years, Math.ceil(val.maxSem / 2));
+
+  // Renderizar barra de pestañas de Años Académicos
+  const yTabsBar = document.getElementById("year-tabs-bar");
+  if (yTabsBar) {
+    let tabsHTML = "";
+    for (let y = 1; y <= numYears; y++) {
+      const ySum = val.yearSummaries[y] || { fullYearEcts: 0, passedEcts: 0, totalEcts: 0 };
+      const isAct = state.active_year_view === y;
+      tabsHTML += `<button class="y-tab ${isAct ? 'active' : ''}" onclick="setYearView(${y})">
+        <span>📅 Año Académico ${y}</span>
+        <span class="y-tab-sub">${ySum.fullYearEcts} ECTS (${ySum.passedEcts} Sup · ${ySum.totalEcts} Act)</span>
+      </button>`;
+    }
+    tabsHTML += `<button class="y-tab ${state.active_year_view === 0 ? 'active' : ''}" onclick="setYearView(0)">
+      <span>👁️ Ver Todos</span>
+      <span class="y-tab-sub">${numYears} Años completos</span>
+    </button>`;
+    yTabsBar.innerHTML = tabsHTML;
+  }
+
+  // Si hay búsqueda activa por texto, mostrar en todos los años para que encuentre rápido
+  const effectiveYearView = q.length > 0 ? 0 : state.active_year_view;
+
   for (let y = 1; y <= numYears; y++) {
+    if (effectiveYearView !== 0 && effectiveYearView !== y) continue;
     const s1 = (y - 1) * 2 + 1, s2 = (y - 1) * 2 + 2;
     const ySum = val.yearSummaries[y] || { totalEcts: 0, passedEcts: 0, fullYearEcts: 0, yearStatus: "ok", isResidual: false };
     const yb = document.createElement("div"); yb.className = "y-block";
-    yb.innerHTML = `<div class="y-head"><div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;"><strong style="font-size:0.96rem;color:var(--cyan);">📅 Año Académico ${y}</strong><span class="bdg ${ySum.yearStatus === 'error' ? 'b-err' : 'b-ok'}">Total Año: ${ySum.fullYearEcts} ECTS (${ySum.passedEcts} Consolidados + ${ySum.totalEcts} En Ruta/Planificados)${ySum.isResidual ? ' · Cierre <24 ECTS' : ''}</span></div><span style="font-size:0.74rem;color:var(--mut);font-family:monospace;">Semestres ${s1} (1Q Otoño) y ${s2} (2Q Primavera)</span></div><div class="y-grid">${renderSemCol(s1, "1Q · Otoño", val, cpm, q, fType, hiCrit, hidePass, numYears * 2)}${renderSemCol(s2, "2Q · Primavera", val, cpm, q, fType, hiCrit, hidePass, numYears * 2)}</div>`;
+    yb.innerHTML = `<div class="y-head">
+      <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+        <strong style="font-size:1rem;color:var(--cyan);">📅 Año Académico ${y}</strong>
+        <span class="bdg ${ySum.yearStatus === 'error' ? 'b-err' : 'b-ok'}">
+          Total: ${ySum.fullYearEcts} ECTS (${ySum.passedEcts} Consolidados + ${ySum.totalEcts} Activos)${ySum.isResidual ? ' · Cierre <24 ECTS' : ''}
+        </span>
+      </div>
+      <span style="font-size:0.75rem;color:var(--mut);font-family:monospace;">Semestres ${s1} (1Q Otoño) y ${s2} (2Q Primavera)</span>
+    </div>
+    <div class="y-grid">
+      ${renderSemCol(s1, "1Q · Otoño", val, cpm, q, fType, hiCrit, hidePass, numYears * 2)}
+      ${renderSemCol(s2, "2Q · Primavera", val, cpm, q, fType, hiCrit, hidePass, numYears * 2)}
+    </div>`;
     board.appendChild(yb);
   }
   setupDnD();
@@ -1112,7 +1275,20 @@ function renderSemCol(t, label, val, cpm, q, fType, hiCrit, hidePass, maxSem) {
     if (q && !s.nombre.toLowerCase().includes(q) && !displayCode(s).includes(q)) return false;
     return true;
   });
-  return `<div class="sem-col" data-sem="${t}"><div style="display:flex;justify-content:space-between;align-items:center;"><div><strong style="font-size:0.88rem;">Semestre ${t}</strong> <span style="font-size:0.73rem;color:var(--mut);">${label}</span></div><div style="display:flex;gap:0.3rem;">${passedLoad > 0 ? `<span class="bdg b-ok">${passedLoad} ECTS Sup.</span>` : ''}<span class="bdg ${activeLoad > state.max_ects_semestre ? 'b-err' : 'b-pri'}">${activeLoad} ECTS Activos</span></div></div><div class="pbar"><div class="pfill" style="width:${pct}%;background:${col};"></div></div><div style="display:flex;flex-direction:column;gap:0.55rem;flex:1;">${subs.length === 0 ? `<div style="margin:auto;font-size:0.75rem;color:var(--sub);padding:1.2rem 0;text-align:center;">Sin asignaturas en este semestre</div>` : ''}${subs.map(s => renderCard(s, t, val, cpm, hiCrit, maxSem)).join('')}</div></div>`;
+  return `<div class="sem-col" data-sem="${t}">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.4rem;">
+      <div><strong style="font-size:0.94rem;">Semestre ${t}</strong> <span style="font-size:0.76rem;color:var(--mut);">${label}</span></div>
+      <div style="display:flex;gap:0.3rem;flex-wrap:wrap;">
+        ${passedLoad > 0 ? `<span class="bdg b-ok">${passedLoad} ECTS Sup.</span>` : ''}
+        <span class="bdg ${activeLoad > state.max_ects_semestre ? 'b-err' : 'b-pri'}">${activeLoad} ECTS Activos</span>
+      </div>
+    </div>
+    <div class="pbar"><div class="pfill" style="width:${pct}%;background:${col};"></div></div>
+    <div style="display:flex;flex-direction:column;gap:0.65rem;flex:1;">
+      ${subs.length === 0 ? `<div style="margin:auto;font-size:0.8rem;color:var(--sub);padding:1.5rem 0;text-align:center;">Sin asignaturas en esta vista</div>` : ''}
+      ${subs.map(s => renderCard(s, t, val, cpm, hiCrit, maxSem)).join('')}
+    </div>
+  </div>`;
 }
 
 function renderCard(s, t, val, cpm, hiCrit, maxSem) {
@@ -1121,19 +1297,19 @@ function renderCard(s, t, val, cpm, hiCrit, maxSem) {
   const cardClass = passed ? "st-passed" : (inCourse ? "st-incourse" : "st-pending");
   let statusBadge = `<span class="bdg b-pri">${s.ects} ECTS</span>`;
   if (passed) statusBadge = `<span class="bdg b-ok">${s.ects} ECTS · ${st === 'reconocida' ? 'RECONOCIDA' : 'SUPERADA'}</span>`;
-  else if (inCourse) statusBadge = `<span class="bdg b-warn" title="Forma parte de la ruta actual pero no desbloquea siguientes hasta aprobarse">⏳ EN CURSO · ${s.ects} ECTS</span>`;
+  else if (inCourse) statusBadge = `<span class="bdg b-warn">⏳ EN CURSO · ${s.ects} ECTS</span>`;
   return `<div class="s-card ${cardClass} ${hiCrit && crit && !passed ? 'crit' : ''}" draggable="${!passed}" data-id="${s.id}">
     <div class="s-meta">
       <span><span class="s-code">${displayCode(s)}</span> · <span style="color:var(--mut);">${s.caracter}</span></span>
-      <div style="display:flex;gap:0.3rem;align-items:center;">
-        ${lockedBy ? `<span class="bdg b-warn" title="Condicionada: requiere aprobar antes ${lockedBy} que está En Curso">🔒 Llave En Curso</span>` : ''}
-        ${crit && !passed ? `<span class="bdg b-err" title="Camino Crítico">🔥 Crítica</span>` : (!passed ? `<span class="bdg b-inf" title="Holgura PERT">H:${slack}</span>` : '')}
+      <div style="display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap;">
+        ${lockedBy ? `<span class="bdg b-warn" title="Condicionada: requiere aprobar antes ${lockedBy}">🔒 Llave En Curso</span>` : ''}
+        ${crit && !passed ? `<span class="bdg b-err">🔥 Crítica</span>` : (!passed ? `<span class="bdg b-inf">H:${slack}</span>` : '')}
         ${statusBadge}
       </div>
     </div>
     <div class="s-title" onclick="openSubjModal('${s.id}')">${s.nombre}</div>
     <div class="s-ctrl no-print">
-      ${passed ? `<span style="font-size:0.74rem;color:var(--cyan);font-family:monospace;font-weight:700;">${nota || 'Consolidada en expediente'}</span>` : `<select style="font-size:0.74rem;padding:0.18rem 0.4rem;" onchange="moveSubjectTo('${s.id}', this.value)">${Array.from({length:maxSem},(_,i)=>i+1).map(sem=>`<option value="${sem}" ${sem==t?'selected':''}>Semestre ${sem}</option>`).join('')}</select>`}
+      ${passed ? `<span style="font-size:0.78rem;color:var(--cyan);font-family:monospace;font-weight:700;">${nota || 'Consolidada en expediente'}</span>` : `<select style="font-size:0.78rem;padding:0.25rem 0.5rem;" onchange="moveSubjectTo('${s.id}', this.value)">${Array.from({length:maxSem},(_,i)=>i+1).map(sem=>`<option value="${sem}" ${sem==t?'selected':''}>Mover a Sem ${sem}</option>`).join('')}</select>`}
       <button class="btn btn-sm ${passed ? '' : 'btn-blue'}" onclick="togglePass('${s.id}')">${passed ? 'Desmarcar' : '✓ Aprobar'}</button>
     </div>
   </div>`;
@@ -1191,8 +1367,9 @@ function toggleOpt(id, autoSwapIfFull = false) {
 function applyExpedientePreset(coursesPassed) {
   const c = +coursesPassed; state.expediente_num = null; state.expediente = {}; state.passed_year = {}; state.passed_sem = {}; state.notas = {}; state.notas_num = {}; state.asignaciones = getDefaultMap();
   CATALOG_SUBJECTS.forEach(s => { if (s.curso_rec <= c) { state.expediente[s.id] = "superada"; state.passed_year[s.id] = s.curso_rec; state.passed_sem[s.id] = (s.curso_rec - 1) * 2 + (s.sem_rec || 2); delete state.asignaciones[s.id]; } });
+  state.active_year_view = Math.min(4, c + 1);
   const sumBox = document.getElementById("exp-summary-box"); if (sumBox) sumBox.style.display = "none";
-  showToast(`Configurado: ${c} curso(s) superado(s).`); refreshUI();
+  showToast(`Configurado: ${c} curso(s) superado(s). Mostrando Año ${state.active_year_view}.`); refreshUI();
 }
 
 function applySmartPreset(mode) {
@@ -1202,7 +1379,6 @@ function applySmartPreset(mode) {
   showToast("Itinerario recalculado respetando estacionalidad y prelaciones desde tu ruta en curso.");
 }
 
-/* DISTRIBUCIÓN POR DEFECTO NIVELADA (S7 = 36 ECTS CON PRÁCTICAS, S8 = 24 ECTS CON RAC+TFG => 0 ALERTAS AL ARRANCAR) */
 function getDefaultMap() {
   const m = {};
   CATALOG_SUBJECTS.forEach(s => {
@@ -1217,9 +1393,9 @@ function changeYears(delta) { state.total_years = Math.min(6, Math.max(4, state.
 
 function renderDAG() {
   const svg = document.getElementById("dag-svg"); if (!svg) return; svg.innerHTML = "";
-  const cpm = computeCPM(), val = validatePlan(state), w = 1100, h = 460, padX = 70, padY = 40, colW = (w - padX * 2) / 3, byC = {1:[], 2:[], 3:[], 4:[]}, pos = {};
+  const cpm = computeCPM(), val = validatePlan(state), w = 1050, h = 450, padX = 65, padY = 38, colW = (w - padX * 2) / 3, byC = {1:[], 2:[], 3:[], 4:[]}, pos = {};
   CATALOG_SUBJECTS.forEach(s => byC[s.curso_rec].push(s));
-  for (let c = 1; c <= 4; c++) { const list = byC[c], stepY = (h - padY * 2) / (list.length + 1); list.forEach((s, i) => { pos[s.id] = { x: padX + (c - 1) * colW + (i%2?16:-16), y: padY + (i + 1) * stepY, s }; }); }
+  for (let c = 1; c <= 4; c++) { const list = byC[c], stepY = (h - padY * 2) / (list.length + 1); list.forEach((s, i) => { pos[s.id] = { x: padX + (c - 1) * colW + (i%2?15:-15), y: padY + (i + 1) * stepY, s }; }); }
   svg.innerHTML += `<defs><marker id="ar-crit" viewBox="0 0 10 10" refX="21" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f43f5e"/></marker><marker id="ar-norm" viewBox="0 0 10 10" refX="21" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/></marker></defs>`;
   PEDAGOGICAL_EDGES.forEach(e => {
     const p1 = pos[e.from], p2 = pos[e.to], crit = cpm.criticalIds.has(e.from) && cpm.criticalIds.has(e.to), dx = (p2.x - p1.x) * 0.45;
@@ -1255,18 +1431,18 @@ function renderStrategy(val) {
     const covered = c.ids.filter(id => isPassedStatus(state.expediente[id]) || state.expediente[id] === "en_curso" || state.asignaciones[id]).length;
     const passed = c.ids.filter(id => isPassedStatus(state.expediente[id])).length;
     const pct = Math.round((covered / c.ids.length) * 100);
-    return `<div><div style="display:flex;justify-content:space-between;font-size:0.76rem;"><strong>${c.name}</strong><span>${pct}% en plan (${passed} consolidadas de ${c.ids.length})</span></div><div class="pbar"><div class="pfill" style="width:${pct}%;background:var(--pri);"></div></div></div>`;
+    return `<div><div style="display:flex;justify-content:space-between;font-size:0.78rem;"><strong>${c.name}</strong><span>${pct}% (${passed}/${c.ids.length} sup.)</span></div><div class="pbar"><div class="pfill" style="width:${pct}%;background:var(--pri);"></div></div></div>`;
   }).join('');
   const psvg = document.getElementById("pareto-svg");
   if (psvg) {
     const curPeak = Math.max(...Object.values(val.termLoads), 0) || 27, curDur = val.lastActiveTerm || 8;
     const pts = [ { label: "Ruta A (8S, 30E)", s: 8, p: 30, color: "#38bdf8" }, { label: "Ruta B (10S, 24E)", s: 10, p: 24, color: "#38bdf8" }, { label: "Ruta C (12S, 18E)", s: 12, p: 18, color: "#38bdf8" }, { label: `Tu Plan (${curDur}S, ${curPeak}E)`, s: curDur, p: curPeak, color: "#f59e0b", current: true } ];
-    const w = psvg.clientWidth || 420, h = 220, pad = 35;
+    const w = 420, h = 220, pad = 35;
     psvg.innerHTML = `<line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="#64748b"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="#64748b"/>`;
     pts.forEach(pt => {
       const x = pad + ((Math.min(12, Math.max(6, pt.s)) - 6) / 6) * (w - pad * 2);
       const y = (h - pad) - ((Math.min(42, Math.max(15, pt.p)) - 15) / 27) * (h - pad * 2);
-      psvg.innerHTML += `<circle cx="${x}" cy="${y}" r="${pt.current ? 7 : 5}" fill="${pt.color}" stroke="#fff" stroke-width="1.5"/><text x="${x}" y="${y - 10}" fill="currentColor" font-size="9" font-family="monospace" text-anchor="middle">${pt.label}</text>`;
+      psvg.innerHTML += `<circle cx="${x}" cy="${y}" r="${pt.current ? 7 : 5}" fill="${pt.color}" stroke="#fff" stroke-width="1.5"/><text x="${x}" y="${y - 10}" fill="currentColor" font-size="9.5" font-family="monospace" text-anchor="middle">${pt.label}</text>`;
     });
   }
 }
@@ -1275,11 +1451,11 @@ function renderCatalogTable() {
   const tb = document.getElementById("full-cat-tbody"); if (!tb) return;
   tb.innerHTML = CATALOG_SUBJECTS.map(s => {
     const st = state.expediente[s.id], nota = state.notas[s.id] || "";
-    let stLabel = `📌 Planificada en Semestre ${state.asignaciones[s.id] || 'null'}`;
+    let stLabel = `📌 Semestre ${state.asignaciones[s.id] || 'null'}`;
     if (st === "superada") stLabel = `🔹 Superada (${nota})`;
     else if (st === "reconocida") stLabel = `🏅 Reconocida (${nota})`;
-    else if (st === "en_curso") stLabel = `⏳ En Curso - Ruta Partida (${nota})`;
-    return `<tr><td style="font-family:monospace;font-weight:700;color:var(--cyan);">${displayCode(s)}</td><td><a href="javascript:void(0)" onclick="openSubjModal('${s.id}')" style="color:var(--txt);font-weight:600;">${s.nombre}</a></td><td><span class="bdg b-inf">${s.caracter}</span></td><td style="font-family:monospace;">${s.ects}</td><td>C${s.curso_rec} · ${s.sem_rec?'S'+s.sem_rec:'<span class="bdg b-warn">null</span>'}</td><td>${s.mod}${s.campus ? ' ('+s.campus+')' : ''}</td><td><strong>${stLabel}</strong></td><td><span class="bdg b-err">Pendiente (0/50)</span></td></tr>`;
+    else if (st === "en_curso") stLabel = `⏳ En Curso (${nota})`;
+    return `<tr><td style="font-family:monospace;font-weight:700;color:var(--cyan);">${displayCode(s)}</td><td><a href="javascript:void(0)" onclick="openSubjModal('${s.id}')" style="color:var(--txt);font-weight:600;">${s.nombre}</a></td><td><span class="bdg b-inf">${s.caracter}</span></td><td style="font-family:monospace;">${s.ects}</td><td>C${s.curso_rec} · ${s.sem_rec?'S'+s.sem_rec:'<span class="bdg b-warn">null</span>'}</td><td>${s.mod}${s.campus ? ' ('+s.campus+')' : ''}</td><td><strong>${stLabel}</strong></td></tr>`;
   }).join('');
 }
 
@@ -1363,7 +1539,7 @@ function setWS(ws) {
 
 function toggleTheme() {
   const r = document.documentElement;
-  r.setAttribute("data-theme", r.getAttribute("data-theme") === "dinosaurio" ? "light" : "dinosaurio");
+  r.setAttribute("data-theme", r.getAttribute("data-theme") === "dark" ? "light" : "dark");
 }
 
 function showToast(m) {
