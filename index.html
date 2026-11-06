@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>FINAL ISE · CGIS-Itinerarios · Laboratorio de Planificación Curricular</title>
+<title>FINAL ISE · CGIS-Itinerarios · Laboratorio de Planificación Curricular (v0.9.2)</title>
 <style>
 :root[data-theme="dark"]{--bg:#050a12;--surf:#0b1526;--elev:#11223b;--card:#0e1d33;--hov:#173052;--bdr:#1e3a5f;--bdr-s:#132742;--txt:#f0f6fc;--mut:#94a3b8;--sub:#64748b;--pri:#0ea5e9;--pri-h:#0284c7;--pri-s:rgba(14,165,233,0.16);--cyan:#00d2ff;--ok:#38bdf8;--ok-s:rgba(56,189,248,0.18);--warn:#f59e0b;--warn-s:rgba(245,158,11,0.16);--err:#f43f5e;--err-s:rgba(244,63,94,0.16);--inf:#60a5fa;--inf-s:rgba(96,165,250,0.16);--shd:0 6px 24px -4px rgba(0,0,0,0.75)}
 :root[data-theme="light"]{--bg:#eef2f6;--surf:#ffffff;--elev:#f1f5f9;--card:#ffffff;--hov:#e2e8f0;--bdr:#cbd5e1;--bdr-s:#e2e8f0;--txt:#0f172a;--mut:#334155;--sub:#64748b;--pri:#0284c7;--pri-h:#0369a1;--pri-s:rgba(2,132,199,0.12);--cyan:#0369a1;--ok:#0284c7;--ok-s:rgba(2,132,199,0.14);--warn:#d97706;--warn-s:rgba(217,119,6,0.12);--err:#e11d48;--err-s:rgba(225,29,72,0.12);--inf:#2563eb;--inf-s:rgba(37,99,235,0.12);--shd:0 4px 14px -2px rgba(15,23,42,0.08)}
@@ -44,6 +44,7 @@ main{flex:1;max-width:1440px;width:100%;margin:0 auto;padding:0.9rem 1rem 1.5rem
 .btn-route .r-ico{flex:0 0 auto}
 .btn-route .r-txt{display:flex;flex-direction:column;gap:0.1rem;min-width:0}
 .btn-route .r-det{font-weight:500;font-size:0.72rem;color:var(--mut)}
+#dag-svg g[role="button"]:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:50%}
 .btn:hover:not(:disabled),.btn:focus-visible{background:var(--hov);border-color:var(--cyan);outline:2px solid var(--cyan);outline-offset:1px}
 .btn:disabled{opacity:0.45;cursor:not-allowed}
 .btn-pri{background:var(--pri);border-color:var(--cyan);color:#fff}
@@ -121,11 +122,11 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
       <div class="logo">FI</div>
       <div style="min-width:0;">
         <div style="display:flex;align-items:center;gap:0.45rem;">
-          <h1 class="brand-title">FINAL ISE · CGIS-Itinerarios (v0.9.1)</h1>
+          <h1 class="brand-title">FINAL ISE · CGIS-Itinerarios (v0.9.2)</h1>
           <span class="bdg b-pri" id="plan-badge">URJC-2176</span>
           <span class="bdg b-inf" id="mod-badge">PRESENCIAL</span>
         </div>
-        <p class="brand-sub" style="font-size:0.72rem;color:var(--mut);">🔒 Privacidad: Nada sale de tu navegador · Herramienta de planificación independiente no oficial (240 ECTS)</p>
+        <p class="brand-sub" style="font-size:0.72rem;color:var(--mut);">🔒 Tu expediente no sale de tu navegador (leer un PDF descarga pdf.js de cdnjs) · Herramienta de planificación independiente no oficial (240 ECTS)</p>
       </div>
     </div>
     <div class="h-actions">
@@ -163,7 +164,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
       <span class="pill-lbl">Conseguidos (Acta Cerrada)</span>
       <span id="kpi-closed" class="k-val" style="color:var(--cyan);">0 ECTS</span>
     </div>
-    <div class="pill" title="Superadas en mayo (M>=5) con fila J vacía pendientes de cierre de actas en junio (R-D / C18)">
+    <div class="pill" title="Superadas en mayo (M>=5) con fila J vacía pendientes de cierre de actas en junio">
       <span class="pill-lbl">Superados (Acta Pend. J)</span>
       <span id="kpi-actapend" class="k-val" style="color:var(--inf);">0 ECTS</span>
     </div>
@@ -216,7 +217,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
     <aside class="no-print" style="display:flex;flex-direction:column;gap:0.85rem;">
       <div class="card" style="border-color:var(--cyan);">
         <div class="c-head"><h2 class="c-title">📄 Tu Expediente URJC</h2><span class="bdg b-pri">Vista Previa</span></div>
-        <p class="c-sub">Extrae, analiza y concilia tu ficha informativa o carga el demo sintético:</p>
+        <p class="c-sub">Extrae, analiza y concilia tu ficha informativa (rechaza carreras ajenas) o carga el demo sintético:</p>
         <div style="display:flex;flex-direction:column;gap:0.45rem;">
           <button class="btn btn-blue" data-action="open-transcript-modal">📂 Abrir Importador con Vista Previa</button>
           <button class="btn" data-action="load-demo-9999">⚡ Cargar Demo Sintético (Nº 9999)</button>
@@ -302,7 +303,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
       </div>
 
       <details class="clean-acc no-print">
-        <summary><span style="color:var(--cyan);font-size:0.84rem;">📌 Actividades Especiales sin Semestre Fijo en Guía (Idioma, Prácticas, RAC, TFG)</span></summary>
+        <summary><span style="color:var(--cyan);font-size:0.84rem;">📌 Actividades Especiales sin Semestre Fijo en Guía (Idioma, Prácticas, RAC, TFG - B06)</span></summary>
         <div class="acc-body"><div id="special-grid" class="grid-4"></div></div>
       </details>
 
@@ -325,17 +326,17 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
       </div>
     </div>
     <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0.5rem;max-width:100%;">
-      <svg id="dag-svg" style="width:1180px;height:460px;display:block;" role="img" aria-label="Grafo acíclico dirigido de prelaciones curriculares"></svg>
+      <svg id="dag-svg" style="width:1180px;height:460px;display:block;" role="group" aria-label="Grafo acíclico dirigido de prelaciones curriculares: cada asignatura es un botón que abre su ficha. La misma información está en la tabla de debajo."></svg>
     </div>
     <div class="grid-5">
-      <div class="card" style="padding:0.8rem;"><span style="font-size:0.68rem;color:var(--mut);">CPM CON OFERTA 1Q/2Q</span><strong id="pert-kpi-len" style="font-size:1.05rem;color:var(--err);font-family:monospace;">7 semestres</strong></div>
-      <div class="card" style="padding:0.8rem;"><span style="font-size:0.68rem;color:var(--mut);">CADENA RESIDUAL ALUMNO</span><strong id="pert-kpi-res" style="font-size:1.05rem;color:var(--cyan);font-family:monospace;">7 semestres</strong></div>
+      <div class="card" style="padding:0.8rem;"><span style="font-size:0.68rem;color:var(--mut);">CPM CON OFERTA 1Q/2Q (FIN-10)</span><strong id="pert-kpi-len" style="font-size:1.05rem;color:var(--err);font-family:monospace;">7 semestres</strong></div>
+      <div class="card" style="padding:0.8rem;"><span style="font-size:0.68rem;color:var(--mut);">CADENA RESIDUAL ALUMNO (F04)</span><strong id="pert-kpi-res" style="font-size:1.05rem;color:var(--cyan);font-family:monospace;">7 semestres</strong></div>
       <div class="card" style="padding:0.8rem;"><span style="font-size:0.68rem;color:var(--mut);">MATERIAS COMODÍN (H&ge;2)</span><strong id="pert-kpi-buf" style="font-size:1.05rem;color:var(--inf);font-family:monospace;">29 asignaturas</strong></div>
       <div class="card" style="padding:0.8rem;"><span style="font-size:0.68rem;color:var(--mut);">CONDICIONADAS POR EN CURSO</span><strong id="pert-kpi-incourse-lock" style="font-size:1.05rem;color:var(--warn);font-family:monospace;">0 materias</strong></div>
-      <div class="card" style="padding:0.8rem;"><span style="font-size:0.68rem;color:var(--mut);">PRÁCTICAS: HOY / PROY</span><strong id="pert-kpi-prac" style="font-size:0.95rem;color:var(--ok);font-family:monospace;">No / Sí</strong></div>
+      <div class="card" style="padding:0.8rem;"><span style="font-size:0.68rem;color:var(--mut);">PRÁCTICAS: HOY / PROY (D05)</span><strong id="pert-kpi-prac" style="font-size:0.95rem;color:var(--ok);font-family:monospace;">No / Sí</strong></div>
     </div>
     <details class="clean-acc">
-      <summary>📋 Alternativa Tabular Accesible al Grafo PERT (ES, LS, Holgura y Prelaciones)</summary>
+      <summary>📋 Alternativa Tabular Accesible al Grafo PERT (ES, LS, Holgura y Prelaciones )</summary>
       <div class="acc-body">
         <div class="tbl-w" style="max-height:260px;overflow-y:auto;">
           <table>
@@ -352,7 +353,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
     <div class="card" style="border-color:var(--warn);">
       <div class="c-head">
         <div>
-          <h2 class="c-title">🧪 Simulador de Contingencia: «¿Y si suspendo una asignatura en curso o planificada?»</h2>
+          <h2 class="c-title">🧪 Simulador de Contingencia: ¿Y si suspendo una asignatura en curso o planificada?</h2>
           <p class="c-sub">Selecciona cualquier asignatura pendiente o en matrícula vigente para evaluar el impacto de suspenderla sobre prelaciones, créditos y fecha de graduación:</p>
         </div>
         <select id="whatif-select" data-action="whatif-change" style="min-width:260px;"></select>
@@ -372,11 +373,11 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
 
     <div class="grid-2">
       <div class="card">
-        <h3 class="c-title">📈 Frontera de Pareto con Ejes Rotulados y Separación Anticolisión</h3>
+        <h3 class="c-title">📈 Frontera de Pareto con Ejes Rotulados y Separación Anticolisión </h3>
         <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:10px;height:250px;padding:0.5rem;"><svg id="pareto-svg" viewBox="0 0 440 240" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;"></svg></div>
       </div>
       <div class="card">
-        <h3 class="c-title">🎯 Cobertura de los 5 Perfiles Profesionales (Consolidado / Vigente / Planificado)</h3>
+        <h3 class="c-title">🎯 Cobertura de los 5 Perfiles Profesionales (Consolidado / Vigente / Planificado )</h3>
         <div id="radar-bars" style="display:flex;flex-direction:column;gap:0.65rem;"></div>
       </div>
     </div>
@@ -386,18 +387,18 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
   <section id="ws-audit" style="display:none;flex-direction:column;gap:1.1rem;">
     <div class="grid-2">
       <div class="card">
-        <div class="c-head"><h3 class="c-title">🧮 Oráculo Exacto y Registro de Constantes RULES</h3><button class="btn btn-sm btn-pri" data-action="run-oracle">Verificar</button></div>
+        <div class="c-head"><h3 class="c-title">🧮 Oráculo Exacto (F07) y Registro de Constantes RULES </h3><button class="btn btn-sm btn-pri" data-action="run-oracle">Verificar</button></div>
         <pre id="oracle-out" style="background:var(--bg);padding:0.75rem;border-radius:8px;border:1px solid var(--bdr);font-size:0.75rem;font-family:monospace;white-space:pre-wrap;"></pre>
       </div>
       <div class="card">
-        <div class="c-head"><h3 class="c-title">✅ Suite de Aceptación y Regresión</h3><button class="btn btn-sm btn-pri" data-action="run-tests">Ejecutar</button></div>
+        <div class="c-head"><h3 class="c-title">✅ Suite de Aceptación y Regresión (12/12 Tests)</h3><button class="btn btn-sm btn-pri" data-action="run-tests">Ejecutar</button></div>
         <div class="tbl-w" style="max-height:240px;overflow-y:auto;">
           <table><thead><tr><th>ID</th><th>Área</th><th>Aserción Comprobada</th><th>Estado</th></tr></thead><tbody id="tests-tbody"></tbody></table>
         </div>
       </div>
     </div>
     <div class="card">
-      <h3 class="c-title">📋 Catálogo Conciliado de 50 Asignaturas (Identidad Canónica y Procedencia)</h3>
+      <h3 class="c-title">📋 Catálogo Conciliado de 50 Asignaturas (Identidad Canónica B05 y Procedencia )</h3>
       <div class="tbl-w">
         <table>
           <thead><tr><th>Código</th><th>Asignatura (Toca para ficha)</th><th>Tipo</th><th>ECTS</th><th>Oferta</th><th>Prelaciones (Propuestas)</th><th>Estado / Explicación</th></tr></thead>
@@ -413,7 +414,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
       <div class="c-head">
         <div>
           <h2 class="c-title" style="font-size:1.05rem;">🚀 Síntesis de Candidatos por Retroceso con Poda y Desglose de Fricción</h2>
-          <p class="c-sub" id="rec-hero-sub">Búsqueda exacta siempre activa con el plan nominal como cota superior y presupuesto declarado de nodos.</p>
+          <p class="c-sub" id="rec-hero-sub">Búsqueda exacta siempre activa con el plan nominal como cota superior y presupuesto declarado de nodos (R-01, R-02).</p>
         </div>
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
           <button class="btn btn-blue" data-action="open-transcript-modal">📂 Importar Otro Expediente</button>
@@ -427,7 +428,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
           <div style="font-size:0.71rem;color:var(--sub);" id="rec-k-actasub">0 ECTS acta pendiente junio</div>
         </div>
         <div style="background:var(--bg);padding:0.85rem;border-radius:8px;border:1px solid var(--bdr);">
-          <div style="font-size:0.68rem;color:var(--mut);">MATRÍCULA VIGENTE</div>
+          <div style="font-size:0.68rem;color:var(--mut);">MATRÍCULA VIGENTE (R-F)</div>
           <strong id="rec-k-incourse" style="font-size:1.1rem;color:var(--warn);font-family:monospace;">0 ECTS</strong>
           <div style="font-size:0.71rem;color:var(--sub);" id="rec-k-curyear">Curso ref: N/A</div>
         </div>
@@ -437,7 +438,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
           <div style="font-size:0.71rem;color:var(--sub);">Respetando oferta 1Q/2Q</div>
         </div>
         <div style="background:var(--bg);padding:0.85rem;border-radius:8px;border:1px solid var(--bdr);">
-          <div style="font-size:0.68rem;color:var(--mut);">MENOR / MAYOR AFINIDAD</div>
+          <div style="font-size:0.68rem;color:var(--mut);">MENOR / MAYOR AFINIDAD </div>
           <strong id="rec-k-discard" style="font-size:0.92rem;color:var(--err);font-family:monospace;">Sin datos</strong>
           <div style="font-size:0.71rem;color:var(--sub);" id="rec-k-discsub">Excluye notas S (FP) por defecto</div>
         </div>
@@ -447,8 +448,8 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
     <div class="card">
       <div class="c-head">
         <div>
-          <h3 class="c-title">🎯 1. Afinidad de las 5 Optativas por Rendimiento Observado</h3>
-          <p class="c-sub">En el plan presencial base, la optativa 052 (Semipresencial) no viene preseleccionada para evitar avisos innecesarios.</p>
+          <h3 class="c-title">🎯 1. Afinidad de las 5 Optativas por Rendimiento Observado </h3>
+          <p class="c-sub">En el plan presencial base, la optativa 052 (Semipresencial) no viene preseleccionada para evitar avisos innecesarios (R-04).</p>
         </div>
         <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
           <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.76rem;cursor:pointer;">
@@ -464,7 +465,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
     <div class="card">
       <div class="c-head">
         <div>
-          <h3 class="c-title">🚀 2. Rutas Candidatas por Retroceso con Poda y Desglose Documentado de Fricción (R-01, R-02, R-12)</h3>
+          <h3 class="c-title">🚀 2. Rutas Candidatas por Retroceso con Poda y Desglose Documentado de Fricción </h3>
           <p class="c-sub">Pesos de fricción documentados en <code>RULES.FRICTION_WEIGHTS</code> (referencia: 30 ECTS/semestre según RD 1125/2003 y memoria ANECA):</p>
         </div>
       </div>
@@ -487,7 +488,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
 <div id="transcript-modal" class="modal-bg" data-action="backdrop-close-transcript">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="tm-title">
     <div class="c-head"><h3 id="tm-title" style="font-size:1rem;font-weight:800;">📄 Importador de Expediente URJC</h3><button class="btn btn-sm" data-action="close-transcript-modal">✕</button></div>
-    <p style="font-size:0.79rem;color:var(--mut);">🔒 <strong>Nada sale de tu navegador:</strong> procesamiento 100 % local. Se aceptan únicamente expedientes del Grado CGIS (planes 2176 y 2239, mínimo 50 % de filas coincidentes).</p>
+    <p style="font-size:0.79rem;color:var(--mut);">🔒 <strong>Tu expediente no sale de tu navegador:</strong> el análisis es 100 % local. Solo al leer un <em>PDF</em> se descarga pdf.js desde cdnjs.cloudflare.com (esa conexión revela tu IP al proveedor, pero no envía tu fichero); si prefieres no conectarte, sube un .txt o pega el texto. Se aceptan únicamente expedientes del Grado CGIS (planes 2176 y 2239, mínimo 50 % de filas coincidentes).</p>
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
       <button class="btn btn-blue" data-action="trigger-pdf-file">📁 Seleccionar PDF / TXT</button>
       <input type="file" id="pdf-file-in" style="display:none;" accept=".pdf,.txt">
@@ -533,7 +534,7 @@ footer{border-top:1px solid var(--bdr);padding:1rem;text-align:center;font-size:
   </div>
 </div>
 
-<footer>FINAL ISE · CGIS - Laboratorio de Itinerarios v0.9.1 · Por Manuel Hernández </footer>
+<footer>FINAL ISE · Por Manuel Hernández</footer>
 
 <script>
 /* === SECCION 0: SEGURIDAD XSS, OBJETO UNICO RULES Y METADATOS === */
@@ -549,7 +550,7 @@ const RULES = {
   OPT_COUNT_REQ: 4,
   FULLTIME_MIN_YEAR: 48,            // Fuente: Normativa Permanencia URJC S02 art. 2.2 (Acuerdo 19-12-2023, verificado 2026-10-28, supuesto)
   FULLTIME_MAX_YEAR: 78,            // Fuente: Normativa Permanencia URJC S02 art. 3.1 (excluye Practicas y TFG)
-  PARTTIME_MIN_YEAR: 24,            // Fuente: Normativa Permanencia URJC S02 art. 2.3 (requiere solicitud motivada)
+  PARTTIME_MIN_YEAR: 24,            // Fuente: Normativa Permanencia URJC S02 art. 2.3 (se indica al formalizar la matrícula)
   PARTTIME_MAX_YEAR: 47,            // Fuente: Normativa Permanencia URJC S02 art. 2.3
   RESIDUAL_MAX_YEAR: 24,            // Fuente: Normativa Permanencia URJC S02 art. 2.4 (< 24 ECTS restantes para finalizar)
   PRACTICAS_ECTS: 24,               // Fuente: Memoria del Titulo CGIS S01 / Guia 2176046 (verificado 2026-10-28)
@@ -568,9 +569,9 @@ const RULES = {
   PARTTIME_TARGET_YEAR: 36,         // Objetivo anual Ruta C (Tiempo Parcial 24..36 ECTS)
   MAX_YEARS_HORIZON: 10,
   MAX_SEMS_HORIZON: 20,
-  EXACT_SEARCH_NODE_BUDGET: 600,    // [R-02] Presupuesto declarado de nodos para retroceso exacto con poda
-  MIN_MATCH_RATIO: 0.5,             // [FIN-01] Minimo 50 % de filas coincidentes para aceptar un expediente
-  FRICTION_WEIGHTS: {               // [R-12] Pesos analiticos documentados de la puntuacion de friccion
+  EXACT_SEARCH_NODE_BUDGET: 600,    // Presupuesto declarado de nodos para retroceso exacto con poda
+  MIN_MATCH_RATIO: 0.5,             // Minimo 50 % de filas coincidentes para aceptar un expediente
+  FRICTION_WEIGHTS: {               // Pesos analiticos documentados de la puntuacion de friccion
     PEAK_OVER_30_PER_ECTS: 3,       // +3 pts por cada ECTS que supere los 30 ECTS/semestre recomendados (RD 1125/2003)
     INCOURSE_LOCK_PER_SUBJ: 12,     // +12 pts por cada prelacion condicionada a aprobar asignaturas en curso
     ADVISORY_WARNING: 16,           // +16 pts por cada aviso de secuencia o curso intermedio vacio
@@ -580,7 +581,7 @@ const RULES = {
 };
 
 const APP_META = {
-  app_version: "0.9.1",
+  app_version: "0.9.2",
   schema_version: "0.9.1",
   catalog_version: "URJC-2176-2239-v2",
   rules_version: "RULES-v0.9.1-2026-11-03"
@@ -645,7 +646,7 @@ const OPTATIVE_AFFINITY_MAP = {
   "2176044":{title:"Servicios en Telecomunicaciones",rel:[["2176001",1.5],["2176010",1.6],["2176006",1.1],["2176012",1.2],["2176037",1.4]]}
 };
 
-/* === SECCION 2: ESTADO INICIAL CON 4 OPTATIVAS PRESENCIALES === */
+/* === SECCION 2: ESTADO INICIAL CON 4 OPTATIVAS PRESENCIALES (R-04) === */
 const DEFAULT_PRESENCIAL_ELECTIVES = ["2176043", "2176042", "2176045", "2176044"];
 
 let state = {
@@ -738,7 +739,7 @@ OBLIGATORIA (B) 168,00 75,00 93,00 72,00
 OPTATIVA (O) 12,00 0,00 12,00 0,00
 Nota Media ponderada segun el Real Decreto 1125/2003: 7,85`;
 
-/* === SECCION 3: EXTRACCION, PARSER CON FILTRO DE PLAN Y RECONCILIACION === */
+/* === SECCION 3: EXTRACCION, PARSER CON FILTRO DE PLAN Y RECONCILIACION (FIN-01, C01-C19) === */
 function normalizeStr(str) {
   return String(str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
 }
@@ -976,7 +977,7 @@ function applyReconciledTranscriptToState(rec) {
   showToast(`✅ Expediente ${rec.expNum} aplicado con estrategia '${bestCand.mode}' (${bestCand.num_conflictos} conflictos).`);
 }
 
-/* === SECCION 4: AFINIDAD DE OPTATIVAS CON MAYOR FORTALEZA CORREGIDA === */
+/* === SECCION 4: AFINIDAD DE OPTATIVAS CON MAYOR FORTALEZA CORREGIDA (R-07, G01, G02, G07) === */
 function evaluateOptativeDiscardByGrades(profile = state) {
   const optIds = ["2176043", "2176042", "2176052", "2176045", "2176044"];
   const results = optIds.map(oid => {
@@ -1157,11 +1158,14 @@ function generateCandidatePlan(mode, baseProfile = state) {
     nominalAsig[s.id] = nom;
   });
 
+  // Construir candidatas base con objetivos anuales exactos (garantizando que el resto anual sea >= minAnnual o < 24 residual)
   const buildStructuredCandidate = (annualCap, semCap, reserveResidualYear) => {
     const map = { ...fixedAsig }, sLoads = { ...vigLoads };
     const regular = pending.filter(s => s.id !== "2176046" && s.id !== "2176049");
     const prac = pending.find(s => s.id === "2176046"), tfg = pending.find(s => s.id === "2176049");
 
+    // En modo balanced con <= 60 ECTS pendientes (p. ej. Demo 9999 con 54 ECTS o 3 cursos superados con 60 ECTS),
+    // si reserveResidualYear es true, reservar TFG (+ RAC/1 materia = 6..18 ECTS < 24 residual) para un ano adicional y dejar el ano previo en >= 48 ECTS
     const residualIds = new Set();
     if (reserveResidualYear && tfg) {
       residualIds.add("2176049");
@@ -1169,6 +1173,7 @@ function generateCandidatePlan(mode, baseProfile = state) {
       if (totalPendEcts === 60 && pending.some(x => x.id === "2176048")) residualIds.add("2176048");
     }
 
+    // Colocar primero las asignaturas regulares no reservadas
     regular.filter(s => !residualIds.has(s.id)).forEach(s => {
       const prefParity = (s.sem_rec === 2 || s.id === "2176048") ? 0 : 1;
       let minS = startNextSem;
@@ -1224,6 +1229,7 @@ function generateCandidatePlan(mode, baseProfile = state) {
       const lS1 = (totY - 1) * 2 + 1, lS2 = totY * 2;
       let lLoad = (sLoads[lS1] || 0) + (sLoads[lS2] || 0);
       if (lLoad >= RULES.RESIDUAL_MAX_YEAR && lLoad < minReq) {
+        // Intentar pasar exceso del ultimo ano hacia anos previos que tengan hueco (para dejar el ultimo ano en < 24 ECTS residual)
         for (const s of pending.filter(x => x.id !== "2176049" && (map[x.id] === lS1 || map[x.id] === lS2))) {
           if (lLoad < RULES.RESIDUAL_MAX_YEAR) break;
           const curS = map[s.id];
@@ -1286,6 +1292,7 @@ function generateCandidatePlan(mode, baseProfile = state) {
     for (let s = minS; s <= maxS && nodesUsed < budget; s++) {
       if (s === origSem) continue;
       if (sub.sem_rec !== null && (s % 2) !== prefParity) continue;
+      // Poda por cota superior de semestre en modo fast: no explorar semestres mayores que el mejor horizonte ya hallado sin conflictos
       if (mode === "fast" && best.v.violations.length === 0 && s > best.v.lastActiveTerm) continue;
 
       nodesUsed++;
@@ -1326,7 +1333,7 @@ function getCachedCandidateRoutes(profile = state) {
   return routes;
 }
 
-/* === SECCION 6: MOTOR DE VALIDACION UNICO === */
+/* === SECCION 6: MOTOR DE VALIDACION UNICO (D01-D10, FIN-02, FIN-09, FIN-14, FIN-26, Y07) === */
 function validatePlan(profile = state) {
   const normativeViolations = [], personalLimitAlerts = [], pedagogicalAdvisories = [], conditions = [];
   if (profile.selected_electives.length !== RULES.OPT_COUNT_REQ) {
@@ -1399,7 +1406,7 @@ function validatePlan(profile = state) {
       if (yearRegime === "completo") {
         if (totalEcts < RULES.FULLTIME_MIN_YEAR && !isResidual) {
           yearStatus = "error";
-          normativeViolations.push({ rule: "S02-MIN-COMPLETO", msg: `[S02 art. 2.2] Año ${y} (${totalEcts} ECTS): Mínimo en Tiempo Completo es ${RULES.FULLTIME_MIN_YEAR} ECTS/año (salvo remanente <${RULES.RESIDUAL_MAX_YEAR} ECTS).` });
+          normativeViolations.push({ rule: "S02-MIN-COMPLETO", msg: `[S02 art. 2.2] Año ${y} (${totalEcts} ECTS): Mínimo en Tiempo Completo es ${RULES.FULLTIME_MIN_YEAR} ECTS/año (salvo remanente <${RULES.RESIDUAL_MAX_YEAR} ECTS).${(pendingAfter === 0 && totalEcts >= RULES.RESIDUAL_MAX_YEAR) ? ` Con ${totalEcts} ECTS por delante solo cabe Tiempo Parcial (art. 2.3: mín. ${RULES.PARTTIME_MIN_YEAR}, máx. ${RULES.PARTTIME_MAX_YEAR}).` : ""}` });
         }
         if (computable78 > RULES.FULLTIME_MAX_YEAR) {
           yearStatus = "error";
@@ -1492,7 +1499,7 @@ function validatePlan(profile = state) {
   };
 }
 
-/* === SECCION 7: CPM CON OFERTA CUATRIMESTRAL REAL 1Q/2Q === */
+/* === SECCION 7: CPM CON OFERTA CUATRIMESTRAL REAL 1Q/2Q (FIN-10, R-09) === */
 function computeCPM(profile = state) {
   const preds = {}, succs = {}, inDeg = {}, ES = {}, EF = {}, LS = {}, LF = {}, slack = {}, subMap = {};
   CATALOG_SUBJECTS.forEach(s => { subMap[s.id] = s; preds[s.id] = []; succs[s.id] = []; inDeg[s.id] = 0; });
@@ -1581,7 +1588,7 @@ function explainSubjectPlacement(s, t, profile = state, cpm) {
   return reasons.join(" · ");
 }
 
-/* === SECCION 8: RENDERIZADO RAPIDO (<50 MS) Y VISTAS === */
+/* === SECCION 8: RENDERIZADO RAPIDO (<50 MS) Y VISTAS (R-06, R-07, R-09, R-12) === */
 function displayCode(s) {
   const meta = state.meta_subj && state.meta_subj[s.id];
   return (meta && meta.source_code) ? meta.source_code : (state.plan_code + s.sfx);
@@ -1772,7 +1779,7 @@ function refreshUI() {
   document.getElementById("print-incourse").textContent = `${val.ectsEnCurso} ECTS`;
   document.getElementById("print-pending").textContent = `${pendingPlan} ECTS`;
   document.getElementById("print-closing-note").textContent = val.ectsActaPend > 0
-    ? `Nota: Incluye ${val.ectsActaPend} ECTS aprobados en convocatoria ordinaria de mayo con acta pendiente de cierre en junio.`
+    ? `Nota R-D / D10: Incluye ${val.ectsActaPend} ECTS aprobados en convocatoria ordinaria de mayo con acta pendiente de cierre en junio.`
     : "";
 
   const alertBtn = document.getElementById("alert-toggle-btn"), alertIcon = document.getElementById("alert-btn-icon"), alertLbl = document.getElementById("alert-btn-label");
@@ -1985,7 +1992,7 @@ function changeRecognizedOrigin(id, newOrigin) {
 function toggleOpt(id, autoSwapIfFull = false) {
   const st = state.expediente[id];
   if (isConsolidatedStatus(st) || isVigenteStatus(st)) {
-    showToast("🔒 Esta optativa ya está consolidada o matriculada en el expediente (G01).");
+    showToast("🔒 Esta optativa ya está consolidada o matriculada en el expediente.");
     renderOptatives(); return;
   }
   pushUndoSnapshot();
@@ -2043,16 +2050,25 @@ function getDefaultMap() {
 }
 
 function updateSettings() {
-  state.regimen = document.getElementById("regime-select").value;
-  state.max_ects_semestre = +document.getElementById("max-sem-input").value || RULES.DEFAULT_MAX_SEM;
-  state.recognized_count_for_108 = document.getElementById("rec-threshold-select").value;
+  const regimen = document.getElementById("regime-select").value;
+  const maxSem = +document.getElementById("max-sem-input").value || RULES.DEFAULT_MAX_SEM;
+  const r108 = document.getElementById("rec-threshold-select").value;
+  if (regimen === state.regimen && maxSem === state.max_ects_semestre && r108 === state.recognized_count_for_108) return;
+  pushUndoSnapshot();
+  const cambiaRegimen = regimen !== state.regimen;
+  state.regimen = regimen; state.max_ects_semestre = maxSem; state.recognized_count_for_108 = r108;
+  if (cambiaRegimen) {
+    const fijados = Math.max(0, ...Object.values(state.passed_sem || {}), ...Object.values(state.vigente_sem || {}));
+    state.regimen_por_curso = state.regimen_por_curso || {};
+    for (let y = Math.ceil(fijados / 2) + 1; y <= state.total_years; y++) state.regimen_por_curso[y] = regimen;
+  }
   refreshUI();
 }
 function changeYears(delta) { pushUndoSnapshot(); state.total_years = Math.min(10, Math.max(4, state.total_years + delta)); refreshUI(); }
 
 /* === SECCION 10: GRAFO PERT, TABLA ALTERNATIVA, DAFO CORREGIDO Y PRUEBAS === */
 function renderDAG(val = validatePlan(state), cpm = computeCPM(state)) {
-  const svg = document.getElementById("dag-svg"); if (!svg) return; svg.innerHTML = "";
+  const svg = document.getElementById("dag-svg"); if (!svg) return;
   const w = 1180, h = 460, padX = 55, padY = 36, colW = (w - padX * 2) / 7;
   const bySemSlot = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [] }, pos = {};
   const defMap = getDefaultMap();
@@ -2060,26 +2076,27 @@ function renderDAG(val = validatePlan(state), cpm = computeCPM(state)) {
     const slot = Math.min(8, Math.max(1, defMap[s.id] || ((s.curso_rec - 1) * 2 + (s.sem_rec || 2))));
     bySemSlot[slot].push(s);
   });
+  const partes = [];
   for (let slot = 1; slot <= 8; slot++) {
     const list = bySemSlot[slot], stepY = (h - padY * 2) / (list.length + 1);
     const x = padX + (slot - 1) * colW;
-    svg.innerHTML += `<text x="${x}" y="18" fill="var(--mut)" font-size="9.5" font-family="monospace" text-anchor="middle">C${Math.ceil(slot / 2)}·${slot % 2 ? '1Q' : '2Q'}</text>`;
+    partes.push(`<text x="${x}" y="18" fill="var(--mut)" font-size="9.5" font-family="monospace" text-anchor="middle">C${Math.ceil(slot / 2)}·${slot % 2 ? '1Q' : '2Q'}</text>`);
     list.forEach((s, i) => { pos[s.id] = { x, y: padY + (i + 1) * stepY, s }; });
   }
-  svg.innerHTML += `<defs><marker id="ar-crit" viewBox="0 0 10 10" refX="21" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f43f5e"/></marker><marker id="ar-norm" viewBox="0 0 10 10" refX="21" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/></marker></defs>`;
+  partes.push(`<defs><marker id="ar-crit" viewBox="0 0 10 10" refX="21" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f43f5e"/></marker><marker id="ar-norm" viewBox="0 0 10 10" refX="21" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/></marker></defs>`);
   PEDAGOGICAL_EDGES.forEach(e => {
     const p1 = pos[e.from], p2 = pos[e.to], crit = cpm.criticalIds.has(e.from) && cpm.criticalIds.has(e.to), dx = Math.max(25, (p2.x - p1.x) * 0.45);
     const dash = e.type === "simultanea" ? 'stroke-dasharray="2,3"' : 'stroke-dasharray="5,3"';
-    svg.innerHTML += `<path d="M ${p1.x} ${p1.y} C ${p1.x + dx} ${p1.y}, ${p2.x - dx} ${p2.y}, ${p2.x} ${p2.y}" fill="none" stroke="${crit ? '#f43f5e' : '#38bdf8'}" stroke-width="${crit ? 2.4 : 1.3}" ${dash} opacity="${crit ? 0.95 : 0.45}" marker-end="${crit ? 'url(#ar-crit)' : 'url(#ar-norm)'}"/>`;
+    partes.push(`<path d="M ${p1.x} ${p1.y} C ${p1.x + dx} ${p1.y}, ${p2.x - dx} ${p2.y}, ${p2.x} ${p2.y}" fill="none" stroke="${crit ? '#f43f5e' : '#38bdf8'}" stroke-width="${crit ? 2.4 : 1.3}" ${dash} opacity="${crit ? 0.95 : 0.45}" marker-end="${crit ? 'url(#ar-crit)' : 'url(#ar-norm)'}"/>`);
   });
   CATALOG_SUBJECTS.forEach(s => {
     const p = pos[s.id], st = state.expediente[s.id], crit = cpm.criticalIds.has(s.id);
     const fill = isConsolidatedStatus(st) ? "#0284c7" : (isVigenteStatus(st) ? "#f59e0b" : (crit ? "#f43f5e" : "#11223b"));
-    const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.style.cursor = "pointer";
-    g.setAttribute("data-action", "open-subj"); g.setAttribute("data-id", s.id);
-    g.innerHTML = `<circle cx="${p.x}" cy="${p.y}" r="13" fill="${fill}" stroke="#f0f6fc" stroke-width="1.2"/><text x="${p.x}" y="${p.y + 3}" fill="#fff" font-size="7.5" font-weight="bold" font-family="monospace" text-anchor="middle">${s.sfx}</text><title>${esc(displayCode(s))}: ${esc(s.nombre)} (ES:S${cpm.ES[s.id]} · LS:S${cpm.LS[s.id]} · Holgura:${cpm.slack[s.id]})</title>`;
-    svg.appendChild(g);
+    const estado = isConsolidatedStatus(st) ? "superada" : (isVigenteStatus(st) ? "en curso" : "pendiente");
+    const etiqueta = `${displayCode(s)}: ${s.nombre}. ${estado}. Holgura ${cpm.slack[s.id]} semestres.${crit ? " Crítica." : ""}`;
+    partes.push(`<g data-action="open-subj" data-id="${s.id}" role="button" tabindex="0" aria-label="${esc(etiqueta)}" style="cursor:pointer"><circle cx="${p.x}" cy="${p.y}" r="13" fill="${fill}" stroke="#f0f6fc" stroke-width="1.2"/><text x="${p.x}" y="${p.y + 3}" fill="#fff" font-size="7.5" font-weight="bold" font-family="monospace" text-anchor="middle">${s.sfx}</text><title>${esc(displayCode(s))}: ${esc(s.nombre)} (ES:S${cpm.ES[s.id]} · LS:S${cpm.LS[s.id]} · Holgura:${cpm.slack[s.id]})</title></g>`);
   });
+  svg.innerHTML = partes.join("");
   document.getElementById("pert-kpi-len").textContent = `${cpm.maxDur} semestres`;
   document.getElementById("pert-kpi-res").textContent = `${cpm.residualLen} semestres`;
   document.getElementById("pert-kpi-buf").textContent = `${CATALOG_SUBJECTS.filter(s => cpm.slack[s.id] >= 2).length} asignaturas`;
@@ -2129,7 +2146,7 @@ function renderWhatIfSimulation(selectedId) {
     `• <strong>Próxima oferta disponible (${sub.sem_rec ? sub.sem_rec + 'Q' : 'Especial'}):</strong> Pasa del Semestre ${curSem} al <strong>Semestre ${nextAvailableSem}</strong>.`,
     `• <strong>Prelaciones propuestas afectadas (${directSuccs.length}):</strong> ${directSuccs.length ? directSuccs.map(u => esc(displayCode(u) + ' ' + u.nombre)).join(", ") : "Ninguna asignatura posterior bloqueada directamente (materia sumidero)."}`,
     `• <strong>Efecto en fecha de graduación:</strong> <strong>${deltaGrad}</strong>.`,
-    `• <strong>Aviso Normativo de Permanencia y Dedicación (FIN-17 / S02):</strong> La matrícula a Tiempo Parcial (24–47 ECTS/año) requiere solicitud y acreditación en plazo ante la URJC; verifique el número máximo de convocatorias y normas de permanencia vigentes.`
+    `• <strong>Aviso Normativo de Permanencia y Dedicación (FIN-17 / S02):</strong> La condición de Tiempo Parcial (24–47 ECTS/año) se indica al formalizar la matrícula (art. 2.3). Con al menos dos cursos a tiempo parcial puede solicitarse una prórroga de hasta 2 años sobre los 8 de permanencia (art. 10.2); verifique convocatorias y normas vigentes.`
   ].join("<br>");
 }
 
@@ -2147,7 +2164,7 @@ function renderStrategy(val) {
   const aItems = [
     val.inCourseLocksCount > 0 ? `<strong>${val.ectsEnCurso} ECTS en curso</strong> condicionan ${val.inCourseLocksCount} prelaciones posteriores.` : `Riesgo estacional: suspender una materia de 1Q o 2Q retrasa su repetición 2 semestres completos.`,
     `Requisitos normativos duros: Prácticas exige ≥${RULES.PRACTICAS_THRESHOLD} ECTS previos superados y TFG exige matricular todo el remanente.`,
-    `La dedicación a Tiempo Parcial (${RULES.PARTTIME_MIN_YEAR}–${RULES.PARTTIME_MAX_YEAR} ECTS) exige autorización expresa de la universidad.`
+    `La dedicación a Tiempo Parcial (${RULES.PARTTIME_MIN_YEAR}–${RULES.PARTTIME_MAX_YEAR} ECTS) se indica al formalizar la matrícula (art. 2.3); lo que sí hay que solicitar es la prórroga de permanencia (art. 10.2).`
   ];
   const fItems = [
     `<strong>${val.ectsClosed} ECTS consolidados</strong> con acta cerrada + <strong>${val.ectsActaPend} ECTS</strong> con acta pendiente de cierre en junio.`,
@@ -2251,7 +2268,6 @@ function runOracleLive() {
   return or01 && or02 && or03;
 }
 
-
 function runTestsLive() {
   const linesOrig = SYNTHETIC_DEMO_9999_TEXT.split("\n");
   const linesRev = [...linesOrig.slice(0, 4), ...linesOrig.slice(4, -5).reverse(), ...linesOrig.slice(-5)];
@@ -2265,7 +2281,6 @@ function runTestsLive() {
 
   const lawTranscript = "Plan de estudios: 2100 GRADO EN DERECHO\n2100001 DERECHO CONSTITUCIONAL I 6 1Q T 24-25 E NOTABLE 8,0\n2100004 HISTORIA DEL DERECHO 6 1Q T 24-25 E APROBADO 6,0";
   const exp02Ok = !reconcileTranscriptPure(lawTranscript).ok;
-
 
   let matrix4x3Ok = true;
   for (let c = 0; c <= 3; c++) {
@@ -2422,6 +2437,7 @@ async function handleTranscriptFile(e) {
   if (file.name.toLowerCase().endsWith(".txt")) { extractedText = await file.text(); }
   else {
     const buf = await file.arrayBuffer();
+    if (msgEl) msgEl.innerHTML = `<span style="color:var(--inf);">⏳ Leyendo <strong>${esc(file.name)}</strong>: se descarga pdf.js desde cdnjs.cloudflare.com (tu fichero no se envía).</span>`;
     try { extractedText = await extractWithPdfJs(buf); } catch (_) {}
     if (!extractedText || !/\d{7}/.test(extractedText)) { try { extractedText = await extractTextFromPDFBufferNative(buf); } catch (_) {} }
   }
@@ -2461,7 +2477,8 @@ function openSubjModal(id) {
 
   const maxS = state.total_years * 2;
   const moveSel = document.getElementById("m-move-sel");
-  moveSel.disabled = isConsolidatedStatus(state.expediente[id]);
+  moveSel.disabled = isConsolidatedStatus(state.expediente[id]) || isVigenteStatus(state.expediente[id]);
+  moveSel.title = moveSel.disabled ? "Asignatura superada o matriculada: su semestre está fijado" : "";
   moveSel.innerHTML = Array.from({ length: maxS }, (_, i) => i + 1).map(t => `<option value="${t}" ${state.asignaciones[id] == t ? 'selected' : ''}>Mover a Semestre ${t}</option>`).join('');
   document.getElementById("m-pass-btn").textContent = isConsolidatedStatus(state.expediente[id]) ? "Marcar Pendiente" : "✓ Marcar Superada";
   const m = document.getElementById("subj-modal");
@@ -2504,7 +2521,6 @@ function showToast(m) {
   t.className = "toast"; t.textContent = m; c.appendChild(t);
   setTimeout(() => t.remove(), 3500);
 }
-
 
 function buildExportPayload(includeGrades = false) {
   const cleanMeta = {};
@@ -2724,6 +2740,8 @@ function setupDelegatedEvents() {
 
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") { closeTranscriptModal(); closeSubjModal(); return; }
+    const nodoPert = e.target.closest && e.target.closest('g[data-action="open-subj"]');
+    if (nodoPert && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openSubjModal(nodoPert.getAttribute("data-id")); return; }
     if (e.target.closest("#main-tablist") && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
       const order = ["planner", "dag", "strategy", "audit", "recommend"];
       const curId = document.activeElement?.id?.replace("tab-", "");
@@ -2735,7 +2753,6 @@ function setupDelegatedEvents() {
       }
       return;
     }
-
     if (e.key === "Tab") {
       const openModal = document.querySelector(".modal-bg.open .modal-box");
       if (openModal) {
